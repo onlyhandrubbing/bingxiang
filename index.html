@@ -1,0 +1,601 @@
+<!doctype html><html lang="zh-Hant-TW"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="description" content="冰箱剩什麼勾一勾，馬上給你 15 分鐘內做得完的家常菜（170 道），快過期食材優先用掉，算出這餐省下多少便當錢，還能排一週剩食採買清單。">
+<meta property="og:title" content="冰箱救援清單｜剩菜食材 15 分鐘料理＋省錢計算">
+<meta property="og:description" content="勾 2～3 樣冰箱剩下的食材，15 分鐘煮好，這餐省下一個便當。">
+<meta property="og:image" content="https://onlyhandrubbing.github.io/bingxiang/og.png"><meta property="og:url" content="https://onlyhandrubbing.github.io/bingxiang/"><link rel="canonical" href="https://onlyhandrubbing.github.io/bingxiang/"><meta property="og:type" content="website"><meta name="twitter:card" content="summary_large_image">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"冰箱救援清單","applicationCategory":"LifestyleApplication","inLanguage":"zh-TW","offers":{"@type":"Offer","price":"0","priceCurrency":"TWD"}}</script>
+<style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
+</head><body>
+<title>冰箱救援｜冰箱剩菜 15 分鐘料理・省錢計算</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Huninn&family=Noto+Sans+TC:wght@400;500;700;900&display=swap">
+<style>
+/* Layout: a phone-sized kitchen app — fridge door to pick, one recipe card at a time, piggy bank for savings. Tab bar at the bottom. */
+:root{
+  --tile:#f4efe6; --tile-line:#e7dfd1; --ink:#2b2622; --muted:#7a6f64;
+  --fridge:#bfe3d6; --fridge-deep:#8cc7b2; --fridge-ink:#1f4a3d;
+  --paper:#fffdf8; --egg:#ffd34d; --egg-ink:#3a2b00; --tomato:#e8503a; --tomato-ink:#fff; --leaf:#3c8c5a;
+  --shadow:0 2px 0 rgba(43,38,34,.08),0 10px 24px -14px rgba(43,38,34,.45);
+  --f-hand:"Huninn","Noto Sans TC",system-ui,sans-serif;
+  --f-body:"Noto Sans TC",system-ui,-apple-system,"PingFang TC","Microsoft JhengHei",sans-serif;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --tile:#1c1a18; --tile-line:#262321; --ink:#f2ece4; --muted:#a99e92;
+  --fridge:#24453b; --fridge-deep:#33604f; --fridge-ink:#d9f3e8;
+  --paper:#2a2622; --egg:#f2c33a; --egg-ink:#2a1f00; --tomato:#f0624c; --tomato-ink:#1d0703; --leaf:#6cc48d;
+  --shadow:0 2px 0 rgba(0,0,0,.3),0 10px 24px -14px rgba(0,0,0,.9); color-scheme:dark}}
+:root[data-theme="dark"]{
+  --tile:#1c1a18; --tile-line:#262321; --ink:#f2ece4; --muted:#a99e92;
+  --fridge:#24453b; --fridge-deep:#33604f; --fridge-ink:#d9f3e8;
+  --paper:#2a2622; --egg:#f2c33a; --egg-ink:#2a1f00; --tomato:#f0624c; --tomato-ink:#1d0703; --leaf:#6cc48d;
+  --shadow:0 2px 0 rgba(0,0,0,.3),0 10px 24px -14px rgba(0,0,0,.9); color-scheme:dark}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html,body{height:100%}
+body{margin:0;color:var(--ink);font-family:var(--f-body);font-size:16px;line-height:1.55;
+  background-color:var(--tile);
+  background-image:linear-gradient(var(--tile-line) 2px,transparent 2px),linear-gradient(90deg,var(--tile-line) 2px,transparent 2px);
+  background-size:56px 56px}
+.app{max-width:480px;margin:0 auto;min-height:100%;display:flex;flex-direction:column;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:14px calc(96px + env(safe-area-inset-bottom,0px))}
+button{font:inherit;color:inherit}
+:focus-visible{outline:3px solid var(--tomato);outline-offset:2px}
+.hand{font-family:var(--f-hand)}
+.top{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:12px}
+.logo{font-family:var(--f-hand);font-size:24px;display:flex;align-items:center;gap:8px}
+.logo .m{width:34px;height:42px;border-radius:9px;background:var(--fridge);border:2.5px solid var(--ink);position:relative}
+.logo .m::before{content:"";position:absolute;left:0;right:0;top:13px;height:2.5px;background:var(--ink)}
+.logo .m::after{content:"";position:absolute;right:5px;top:4px;width:3px;height:6px;border-radius:2px;background:var(--ink);box-shadow:0 14px 0 var(--ink)}
+.pig{display:flex;align-items:center;gap:6px;background:var(--paper);border:2px solid var(--ink);border-radius:999px;padding:4px 12px 4px 8px;font-family:var(--f-hand);font-size:16px;cursor:pointer}
+.pig b{color:var(--tomato);font-weight:400}
+.gear{border:0;background:transparent;font-size:22px;cursor:pointer;padding:4px}
+/* fridge */
+.fridge{background:var(--fridge);border:3px solid var(--ink);border-radius:28px;padding:18px 16px 22px;position:relative;box-shadow:var(--shadow)}
+.fridge::after{content:"";position:absolute;right:-3px;top:40px;width:10px;height:80px;border-radius:8px 0 0 8px;background:var(--ink)}
+.fridge h1{font-family:var(--f-hand);font-weight:400;font-size:30px;line-height:1.2;margin:0 0 4px;color:var(--fridge-ink);text-wrap:balance}
+.fridge p{margin:0 0 12px;color:var(--fridge-ink);opacity:.8;font-size:14px}
+.search{width:100%;font:inherit;padding:10px 14px;border-radius:14px;border:2.5px solid var(--ink);background:var(--paper);color:var(--ink);margin-bottom:12px}
+.shelf{display:flex;flex-wrap:wrap;gap:10px;padding:12px 4px 14px;border-bottom:3px solid var(--fridge-deep);margin-bottom:6px}
+.shelf:last-child{border-bottom:0}
+.shelf-label{font-size:12px;letter-spacing:.12em;color:var(--fridge-ink);font-weight:700;margin-top:6px}
+.more{border:0;background:transparent;color:var(--fridge-ink);font-weight:700;text-decoration:underline;text-underline-offset:3px;cursor:pointer;padding:8px 2px;font-size:14px}
+.st{border:2px solid var(--ink);background:var(--paper);border-radius:14px;padding:6px 10px 6px 6px;display:inline-flex;align-items:center;gap:6px;cursor:pointer;box-shadow:0 2px 0 var(--ink);transform:rotate(var(--r,0deg));transition:transform .15s,background .15s;position:relative;font-size:15px}
+.st:active{transform:rotate(var(--r,0deg)) translateY(2px);box-shadow:none}
+.st .e{font-size:22px;line-height:1;width:28px;height:28px;display:grid;place-items:center}
+.st .e.txt{font-size:13px;font-weight:900;border-radius:8px;background:var(--fridge);color:var(--fridge-ink)}
+.st.on{background:var(--egg);color:var(--egg-ink)}
+.st.hot{background:var(--tomato);color:var(--tomato-ink)}
+.st.hot::after{content:"快壞了";position:absolute;top:-10px;right:-8px;font-size:10px;font-weight:900;background:var(--ink);color:var(--paper);border-radius:6px;padding:0 5px;transform:rotate(8deg)}
+.tip{font-size:13px;color:var(--fridge-ink);opacity:.85;margin-top:8px}
+/* tray */
+.tray{position:fixed;left:0;right:0;bottom:calc(64px + env(safe-area-inset-bottom,0px));z-index:12;display:flex;justify-content:center;pointer-events:none;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.tray-in{pointer-events:auto;max-width:448px;width:100%;background:var(--ink);color:var(--paper);border-radius:20px;padding:8px 8px 8px 14px;display:flex;align-items:center;gap:10px;box-shadow:0 12px 30px -10px rgba(0,0,0,.6)}
+.tray .picked{flex:1;min-width:0;display:flex;gap:2px;font-size:22px;overflow:hidden;white-space:nowrap}
+.tray .picked .txt{font-size:12px;font-weight:900;background:var(--fridge);color:var(--fridge-ink);border-radius:6px;padding:2px 4px;align-self:center}
+.go{border:0;background:var(--egg);color:var(--egg-ink);font-family:var(--f-hand);font-size:18px;border-radius:14px;padding:10px 16px;cursor:pointer;white-space:nowrap}
+.go:disabled{opacity:.5;cursor:default}
+/* tabs */
+.tabs{position:fixed;left:0;right:0;bottom:0;z-index:13;background:var(--paper);border-top:2.5px solid var(--ink);display:flex;justify-content:center;
+  padding-bottom:env(safe-area-inset-bottom,0px);padding-left:env(safe-area-inset-left,0px);padding-right:env(safe-area-inset-right,0px)}
+.tabs-in{max-width:480px;width:100%;display:grid;grid-template-columns:repeat(3,1fr)}
+.tab{border:0;background:transparent;padding:8px 0 10px;cursor:pointer;display:grid;justify-items:center;gap:0;font-size:12px;color:var(--muted)}
+.tab span{font-size:22px;line-height:1.2}
+.tab[aria-selected="true"]{color:var(--ink);font-weight:700}
+.tab[aria-selected="true"] span{transform:translateY(-2px) scale(1.12)}
+/* deck */
+.backrow{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:10px}
+.link{border:0;background:transparent;cursor:pointer;color:var(--ink);font-weight:700;text-decoration:underline;text-underline-offset:3px;padding:6px 0}
+.have{font-size:14px;color:var(--muted)}
+.deck{position:relative;min-height:440px;touch-action:pan-y}
+.card{position:absolute;inset:0 0 auto 0;background:var(--paper);border:3px solid var(--ink);border-radius:24px;padding:18px 18px 20px;box-shadow:var(--shadow);display:grid;gap:12px;transition:transform .25s ease,opacity .25s}
+.card.behind{transform:translateY(12px) rotate(2.5deg) scale(.97);z-index:0}
+.card.behind2{transform:translateY(22px) rotate(-2deg) scale(.94);z-index:-1}
+.card.front{z-index:2}
+.plate{height:150px;border-radius:50%;width:150px;margin:0 auto;background:radial-gradient(circle at 50% 50%,var(--paper) 52%,var(--tile-line) 53%,var(--tile-line) 60%,var(--paper) 61%);border:3px solid var(--ink);position:relative}
+.plate i{position:absolute;font-style:normal;font-size:40px;line-height:1}
+.plate i.txt{font-size:15px;font-weight:900;background:var(--fridge);color:var(--fridge-ink);border-radius:8px;padding:3px 6px}
+.card h2{font-family:var(--f-hand);font-weight:400;font-size:32px;line-height:1.15;margin:0;text-align:center}
+.facts{display:flex;justify-content:center;gap:8px;flex-wrap:wrap;font-size:13px}
+.facts span{border:2px solid var(--ink);border-radius:999px;padding:1px 10px}
+.facts .hotf{background:var(--tomato);color:var(--tomato-ink);border-color:var(--tomato)}
+.facts .miss{border-style:dashed}
+.stamp{position:absolute;top:14px;right:14px;width:76px;height:76px;border:3px solid var(--tomato);border-radius:50%;color:var(--tomato);display:grid;place-items:center;text-align:center;transform:rotate(-14deg);font-family:var(--f-hand);line-height:1}
+.stamp small{font-size:11px;display:block}.stamp b{font-weight:400;font-size:24px;display:block}
+.card .note{font-size:13px;color:var(--muted);text-align:center;margin:0}
+.card .note a{color:var(--leaf);font-weight:700}
+.btns{display:grid;grid-template-columns:1fr 1.4fr;gap:10px}
+.btn{border:2.5px solid var(--ink);background:var(--paper);border-radius:16px;padding:11px 12px;font-family:var(--f-hand);font-size:18px;cursor:pointer;box-shadow:0 3px 0 var(--ink)}
+.btn:active{transform:translateY(3px);box-shadow:none}
+.btn.red{background:var(--tomato);color:var(--tomato-ink)}
+.btn.egg{background:var(--egg);color:var(--egg-ink)}
+.dots{display:flex;justify-content:center;gap:6px;margin-top:6px}
+.dots i{width:7px;height:7px;border-radius:50%;background:var(--tile-line);border:1.5px solid var(--ink)}
+.dots i.on{background:var(--ink)}
+.empty{background:var(--paper);border:3px dashed var(--ink);border-radius:24px;padding:24px;text-align:center}
+.empty h2{font-family:var(--f-hand);font-weight:400;margin:0 0 6px}
+/* cook */
+.cook{background:var(--paper);border:3px solid var(--ink);border-radius:24px;padding:20px;display:grid;gap:14px;box-shadow:var(--shadow)}
+.cook h2{font-family:var(--f-hand);font-weight:400;font-size:28px;margin:0}
+.prog{height:8px;border-radius:6px;background:var(--tile-line);overflow:hidden}.prog i{display:block;height:100%;background:var(--leaf);transition:width .3s}
+.stepno{font-family:var(--f-hand);font-size:18px;color:var(--muted)}
+.steptext{font-size:22px;line-height:1.5;font-weight:500;min-height:4.5em}
+.chiplist{display:flex;gap:6px;flex-wrap:wrap;font-size:13px}
+.chiplist span{background:var(--tile);border-radius:8px;padding:1px 8px}
+/* week & bank */
+.panel{display:grid;gap:14px}
+.sheet{background:var(--paper);border:3px solid var(--ink);border-radius:24px;padding:18px;display:grid;gap:12px;box-shadow:var(--shadow)}
+.sheet h1{font-family:var(--f-hand);font-weight:400;font-size:28px;margin:0;line-height:1.2}
+.sheet p{margin:0;color:var(--muted);font-size:14px}
+.seg{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.seg .lab{font-size:14px;color:var(--muted);width:4.5em}
+.pill{border:2px solid var(--ink);background:var(--paper);border-radius:999px;padding:4px 14px;cursor:pointer;font-size:15px}
+.pill[aria-pressed="true"]{background:var(--egg);color:var(--egg-ink);font-weight:700}
+.daygrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,130px),1fr));gap:10px}
+.day{background:var(--tile);border-radius:14px;padding:10px;display:grid;gap:2px;transform:rotate(var(--r,0deg))}
+.day small{font-family:var(--f-hand);color:var(--muted)}
+.day b{font-size:15px;line-height:1.3}
+.day span{font-size:12px;color:var(--muted)}
+.shop{display:grid;gap:2px}
+.shop label{display:grid;grid-template-columns:auto 1fr auto auto;gap:10px;align-items:center;padding:7px 2px;border-bottom:2px dotted var(--tile-line);font-size:15px;cursor:pointer}
+.shop input{width:20px;height:20px;accent-color:var(--leaf)}
+.shop input:checked+span{text-decoration:line-through;color:var(--muted)}
+.shop .p{font-variant-numeric:tabular-nums;color:var(--muted);font-size:14px}
+.shop a{color:var(--leaf);font-weight:700;font-size:13px}
+.big3{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;text-align:center}
+.big3 div{background:var(--tile);border-radius:14px;padding:8px 4px}
+.big3 b{display:block;font-family:var(--f-hand);font-weight:400;font-size:22px;font-variant-numeric:tabular-nums}
+.big3 small{font-size:11px;color:var(--muted)}
+.shoplinks{display:flex;flex-wrap:wrap;gap:8px}
+.shoplinks a{font-size:13px;text-decoration:none;border:2px solid var(--ink);border-radius:999px;padding:3px 12px;color:var(--ink);background:var(--paper)}
+.fine{font-size:11.5px;color:var(--muted);margin:0}
+.piggy{display:grid;justify-items:center;gap:4px;padding:6px 0 4px;text-align:center}
+.piggy svg{width:170px;height:auto}
+.piggy .amt{font-family:var(--f-hand);font-size:48px;line-height:1;color:var(--tomato)}
+.piggy small{color:var(--muted)}
+.log{display:grid;gap:4px;font-size:14px;max-height:220px;overflow:auto}
+.log div{display:grid;grid-template-columns:auto 1fr auto;gap:10px;padding:4px 0;border-bottom:2px dotted var(--tile-line)}
+.log .p{color:var(--tomato);font-variant-numeric:tabular-nums}
+.shareimg{display:grid;justify-items:center;gap:6px}
+.shareimg img{max-width:min(100%,300px);border-radius:12px;border:2px solid var(--ink)}
+.row{display:flex;gap:8px;flex-wrap:wrap}
+.coin{position:fixed;z-index:30;font-size:34px;pointer-events:none;animation:drop 0.9s ease-in forwards}
+@keyframes drop{0%{transform:translate(0,0) scale(1.4);opacity:1}100%{transform:translate(var(--dx),var(--dy)) scale(.4);opacity:.2}}
+.toast{position:fixed;left:50%;bottom:calc(140px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--ink);color:var(--paper);padding:10px 16px;border-radius:14px;font-weight:700;z-index:40;max-width:calc(100% - 32px);text-align:center}
+.modal{position:fixed;inset:0;z-index:50;background:rgba(0,0,0,.4);display:flex;align-items:flex-end;justify-content:center}
+.modal .sheet{max-width:480px;width:100%;border-radius:24px 24px 0 0;padding-bottom:calc(20px + env(safe-area-inset-bottom,0px))}
+.pop{animation:pop .3s ease-out}
+@keyframes pop{0%{transform:scale(.9);opacity:.3}100%{transform:scale(1);opacity:1}}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+
+<div class="app">
+  <header class="top">
+    <div class="logo"><span class="m" aria-hidden="true"></span>冰箱救援</div>
+    <div style="display:flex;align-items:center;gap:6px">
+      <button class="pig" id="pigBtn" type="button" aria-label="打開存錢筒">🐷 本月省 <b id="pigAmt">0</b> 元</button>
+      <button class="gear" id="gearBtn" type="button" aria-label="設定">⚙️</button>
+    </div>
+  </header>
+
+  <!-- TODAY: pick -->
+  <section id="v-pick">
+    <div class="fridge">
+      <h1>冰箱裡還剩什麼？</h1>
+      <p>點你有的東西，快壞掉的再點一下。</p>
+      <input class="search" id="q" type="search" placeholder="找食材，例如：豆腐" autocomplete="off" aria-label="找食材">
+      <div id="shelves"></div>
+    </div>
+  </section>
+
+  <!-- TODAY: deck -->
+  <section id="v-deck" hidden>
+    <div class="backrow"><button class="link" id="backPick" type="button">← 改食材</button><span class="have" id="haveTxt"></span></div>
+    <div class="deck" id="deck"></div>
+    <div class="dots" id="dots"></div>
+  </section>
+
+  <!-- TODAY: cook -->
+  <section id="v-cook" hidden>
+    <div class="backrow"><button class="link" id="backDeck" type="button">← 換一道</button><span class="have" id="cookTime"></span></div>
+    <div class="cook">
+      <h2 id="cookName"></h2>
+      <div class="chiplist" id="cookIng"></div>
+      <div class="prog"><i id="cookProg"></i></div>
+      <div class="stepno" id="stepNo"></div>
+      <div class="steptext" id="stepText" aria-live="polite"></div>
+      <div class="btns"><button class="btn" id="prevStep" type="button">上一步</button><button class="btn egg" id="nextStep" type="button">下一步</button></div>
+    </div>
+  </section>
+
+  <!-- WEEK -->
+  <section id="v-week" class="panel" hidden>
+    <div class="sheet">
+      <h1>這週不想再丟菜</h1>
+      <p>先把冰箱的用完，再買「一樣能煮好幾天」的。</p>
+      <div class="seg"><span class="lab">煮幾天</span><span id="wDays" class="seg"></span></div>
+      <div class="seg"><span class="lab">幾個人</span><span id="wPpl" class="seg"></span></div>
+      <button class="btn red" id="wGo" type="button">幫我排這週</button>
+    </div>
+    <div id="wOut" class="panel"></div>
+  </section>
+
+  <!-- BANK -->
+  <section id="v-bank" class="panel" hidden>
+    <div class="sheet">
+      <div class="piggy">
+        <svg viewBox="0 0 200 140" aria-hidden="true"><ellipse cx="100" cy="80" rx="70" ry="52" fill="#f7a8a0" stroke="currentColor" stroke-width="5"/><circle cx="150" cy="70" r="20" fill="#f7a8a0" stroke="currentColor" stroke-width="5"/><circle cx="146" cy="68" r="3" fill="currentColor"/><circle cx="156" cy="68" r="3" fill="currentColor"/><circle cx="125" cy="55" r="5" fill="currentColor"/><path d="M78 30 h40" stroke="currentColor" stroke-width="6" stroke-linecap="round"/><path d="M60 125 v10 M85 128 v10 M120 128 v10 M140 124 v10" stroke="currentColor" stroke-width="7" stroke-linecap="round"/><path d="M38 70 q-18 -8 -10 -22" fill="none" stroke="currentColor" stroke-width="5" stroke-linecap="round"/></svg>
+        <small id="bankMonth"></small>
+        <span class="amt" id="bankAmt">0</span>
+        <small>元便當錢留在口袋</small>
+      </div>
+      <div class="big3"><div><b id="bMeals">0</b><small>在家煮</small></div><div><b id="bRescue">0</b><small>救回食材（元）</small></div><div><b id="bAll">0</b><small>累計省下（元）</small></div></div>
+      <div class="log" id="log"></div>
+      <div class="row"><button class="btn red" id="shareBtn" type="button">做成分享圖</button><button class="btn" id="copyBtn" type="button">複製戰績</button></div>
+      <div class="shareimg" id="shareBox" hidden><img id="shareImg" alt="本月省錢戰績"><span class="fine">長按或右鍵存圖，貼到 IG、Threads、LINE</span></div>
+      <button class="link" id="resetBtn" type="button" style="justify-self:start;color:var(--muted);font-weight:400">清除紀錄</button>
+    </div>
+    <p class="fine">省下金額 = 便當價 − 這道菜另外要買的食材。冰箱裡本來就有、放著會壞掉的不算成本。價格為台灣超市估算。「線上買」與收納用品連結可能含推薦分潤。</p>
+  </section>
+</div>
+
+<div class="tray" id="tray"><div class="tray-in"><div class="picked" id="picked"><span style="font-size:14px;opacity:.75;align-self:center">還沒選食材</span></div><button class="go" id="goBtn" type="button" disabled>幫我想菜</button></div></div>
+
+<nav class="tabs"><div class="tabs-in" role="tablist">
+  <button class="tab" role="tab" id="t-today" aria-selected="true" type="button"><span>🍳</span>今天煮什麼</button>
+  <button class="tab" role="tab" id="t-week" aria-selected="false" type="button"><span>🗓️</span>一週菜單</button>
+  <button class="tab" role="tab" id="t-bank" aria-selected="false" type="button"><span>🐷</span>存錢筒</button>
+</div></nav>
+
+<div class="modal" id="settings" hidden><div class="sheet">
+  <h1 style="font-size:24px">設定</h1>
+  <div class="seg"><span class="lab">外面一餐</span><span id="bentoSeg" class="seg"></span></div>
+  <div><p style="margin-bottom:6px">家裡一定有的調味料（沒有的就點掉）</p><div class="seg" id="stapleSeg"></div></div>
+  <button class="btn egg" id="closeSet" type="button">好了</button>
+</div></div>
+<div class="toast" id="toast" hidden></div>
+
+<script>
+(()=>{
+const CATS=[
+ ['蛋・豆製品',[['雞蛋',16],['豆腐',20],['豆干',15],['皮蛋',12]]],
+ ['肉・海鮮',[['豬絞肉',40],['豬肉片',45],['雞胸肉',40],['雞腿肉',55],['培根',30],['火腿',15],['香腸',25],['蝦仁',55],['鮭魚',90],['蛤蜊',60],['火鍋料',35],['鮪魚罐頭',35]]],
+ ['蔬菜',[['高麗菜',20],['番茄',15],['洋蔥',10],['青蔥',5],['青椒',15],['紅蘿蔔',8],['馬鈴薯',15],['菇類',25],['葉菜類',20],['小黃瓜',12],['茄子',20],['韭菜',15],['九層塔',10],['豆芽菜',10],['絲瓜',25],['南瓜',20],['地瓜',15],['白蘿蔔',15],['花椰菜',30],['泡菜',30],['玉米罐頭',20]]],
+ ['主食',[['白飯',10],['麵條',15],['泡麵',20],['烏龍麵',25],['冬粉',10],['吐司',12],['饅頭',15],['米粉',15],['年糕',30],['冷凍水餃',40]]],
+ ['乳製品',[['牛奶',15],['起司片',10],['奶油',10]]]
+];
+const PRICE={};CATS.forEach(c=>c[1].forEach(([n,p])=>PRICE[n]=p));
+const R=[
+['番茄炒蛋',['雞蛋','番茄'],['青蔥'],10,['番茄切塊，蛋加一點鹽打散。','熱鍋多一點油，蛋炒到半熟先盛起。','同鍋炒番茄到出汁，加一小匙糖、少許鹽。','蛋倒回去拌勻，撒蔥花起鍋。']],
+['蔥花煎蛋',['雞蛋','青蔥'],[],6,['蔥切花，和蛋、少許鹽打勻。','中火熱油，倒入蛋液。','底部定型後翻面，兩面金黃即可。']],
+['黃金蛋炒飯',['白飯','雞蛋'],['青蔥','火腿','玉米罐頭','紅蘿蔔','培根','蝦仁','香腸'],10,['冰過的隔夜飯先撥散。','熱油炒蛋到半熟，馬上下飯一起拌炒。','加冰箱裡的配料切丁一起炒。','鹽、胡椒調味，最後沿鍋邊淋一點醬油。']],
+['番茄蛋花湯',['番茄','雞蛋'],['青蔥','豆腐'],10,['番茄切塊，用一點油炒軟。','加兩碗水煮滾，加鹽。','關小火，蛋液繞圈倒入，等 10 秒再攪。','撒蔥花。']],
+['培根炒高麗菜',['高麗菜','培根'],['紅蘿蔔'],8,['高麗菜用手撕片，培根切段。','乾鍋把培根煎出油。','下蒜片、高麗菜大火快炒。','加 2 匙水燜 1 分鐘，鹽調味。']],
+['蒜炒高麗菜',['高麗菜'],['紅蘿蔔','香腸'],7,['高麗菜撕片洗淨瀝乾。','油爆香蒜片。','大火炒高麗菜，加 2 匙水燜軟。','加鹽起鍋。']],
+['醬燒肉末豆腐',['豆腐','豬絞肉'],['青蔥'],12,['豆腐切丁。','絞肉炒散炒到變色，加蒜末。','加醬油 1.5 匙、糖少許、水半碗。','放豆腐小火煮 5 分鐘，收汁撒蔥。']],
+['蔥燒豆腐',['豆腐'],['青蔥'],12,['豆腐切厚片，擦乾。','煎到兩面金黃。','加醬油、糖、水各 1 匙半，燒到入味。','撒大把蔥段。']],
+['螞蟻上樹',['冬粉','豬絞肉'],['青蔥','紅蘿蔔'],12,['冬粉泡溫水 5 分鐘剪段。','絞肉炒散，加蒜末、醬油。','加水一碗煮滾，放冬粉。','吸乾湯汁撒蔥。']],
+['番茄雞蛋麵',['麵條','番茄','雞蛋'],['青蔥','葉菜類'],12,['煮水下麵。','另鍋炒番茄出汁，加水一碗、鹽、糖少許。','倒入蛋液成蛋花。','麵撈進湯裡，有青菜就一起燙。']],
+['蔥油拌麵',['麵條','青蔥'],[],10,['蔥切段，小火用油慢慢煎到焦香。','加醬油 2 匙、糖 1 小匙煮滾成蔥油。','麵煮熟瀝乾，淋上蔥油拌勻。']],
+['豪華加料泡麵',['泡麵','雞蛋'],['葉菜類','青蔥','火腿','高麗菜','菇類','香腸'],8,['水滾先放菇、高麗菜等耐煮的料。','下麵和調味包。','打一顆蛋不要攪，蓋鍋 1 分鐘。','最後放青菜、蔥。']],
+['起司火腿蛋吐司',['吐司','雞蛋','起司片'],['火腿'],8,['平底鍋煎一顆荷包蛋。','吐司放起司、蛋，有火腿就疊上。','蓋另一片吐司，鍋子小火兩面煎到起司融化。']],
+['法式吐司',['吐司','雞蛋','牛奶'],[],10,['蛋、牛奶半杯、糖 1 匙打勻。','吐司兩面泡進蛋奶液。','奶油或油小火煎到兩面金黃。']],
+['鮪魚玉米三明治',['吐司','鮪魚罐頭'],['玉米罐頭','小黃瓜','洋蔥'],6,['鮪魚瀝油，加玉米、切碎的洋蔥或小黃瓜。','加胡椒，有美乃滋就加一匙。','夾進吐司，對切。']],
+['鮪魚炒飯',['白飯','鮪魚罐頭'],['雞蛋','玉米罐頭','青蔥','洋蔥'],10,['鮪魚瀝油，罐頭的油可以拿來炒。','炒蛋後下飯炒散。','加鮪魚、玉米，鹽、胡椒調味。','撒蔥花。']],
+['洋蔥炒蛋',['洋蔥','雞蛋'],[],8,['洋蔥切絲炒到半透明微甜。','蛋液加鹽倒入。','稍微定型後大塊翻炒起鍋。']],
+['洋蔥燒肉片',['豬肉片','洋蔥'],['青蔥'],12,['醬油 2 匙、糖 1 匙、水 2 匙調成醬。','洋蔥絲炒軟。','下肉片炒到變色。','倒入醬汁收到濃稠，配飯剛好。']],
+['青椒炒肉絲',['豬肉片','青椒'],['紅蘿蔔'],10,['肉切絲，抓醬油、一點油。','肉先炒到八分熟盛起。','炒青椒、紅蘿蔔絲，加鹽。','肉倒回快炒均勻。']],
+['菇菇炒肉片',['豬肉片','菇類'],['洋蔥','青蔥'],10,['菇類剝開不用洗太濕。','肉片炒變色盛起。','乾鍋把菇炒出水再加油。','肉片回鍋，醬油、胡椒調味。']],
+['蒜炒青菜',['葉菜類'],[],5,['青菜切段洗淨。','油爆香蒜末。','大火下菜快炒，加鹽，菜一軟就起鍋。']],
+['青菜肉片湯',['葉菜類','豬肉片'],['菇類','豆腐'],10,['肉片抓一點鹽。','水滾後下肉片，撈掉浮沫。','放青菜、菇類，煮滾加鹽胡椒。']],
+['蔥爆雞胸',['雞胸肉','青蔥'],['洋蔥'],12,['雞胸切薄片，抓醬油、一點油。','大火煎雞片到兩面變白。','加大量蔥段、醬油、糖少許快炒。']],
+['香煎雞腿排',['雞腿肉'],[],14,['去骨雞腿兩面抹鹽、胡椒。','雞皮朝下放冷鍋，中火煎 8 分鐘到皮脆。','翻面再煎 4 分鐘，切開沒血水就好。']],
+['照燒雞腿',['雞腿肉'],['洋蔥'],15,['雞腿皮朝下煎到金黃，翻面。','醬油 2 匙、糖 1 匙、水 3 匙倒入。','蓋鍋小火 4 分鐘，開蓋收汁。']],
+['培根煎馬鈴薯',['馬鈴薯','培根'],['洋蔥'],14,['馬鈴薯切薄片，微波 3 分鐘。','培根煎出油。','放馬鈴薯片煎到兩面金黃。','鹽、黑胡椒調味。']],
+['酸辣馬鈴薯絲',['馬鈴薯'],['青椒','紅蘿蔔'],10,['馬鈴薯切細絲，泡水洗掉澱粉。','油爆蒜，下絲大火炒 2 分鐘。','加醋 1 匙、鹽，保持脆口起鍋。']],
+['紅蘿蔔炒蛋',['紅蘿蔔','雞蛋'],['青蔥'],8,['紅蘿蔔刨絲，用油炒軟。','推到一邊，倒入蛋液。','蛋快熟時拌在一起，加鹽。']],
+['涼拌小黃瓜',['小黃瓜'],[],5,['小黃瓜拍裂切段，抓一點鹽 3 分鐘。','倒掉出水。','加蒜末、醬油、醋、糖各一點拌勻。']],
+['韭菜炒蛋',['韭菜','雞蛋'],[],7,['韭菜切段。','蛋炒到半熟盛起。','大火炒韭菜，加鹽，蛋回鍋拌勻。']],
+['韭菜炒豆干',['韭菜','豆干'],['豬肉片'],8,['豆干切條。','油煎豆干到微焦，加醬油。','下韭菜大火快炒。']],
+['豆干炒肉絲',['豆干','豬肉片'],['青蔥','青椒'],10,['肉絲抓醬油。','肉炒變色，下豆干條。','加醬油、糖少許、一點水炒到入味。']],
+['滑蛋蝦仁',['蝦仁','雞蛋'],['青蔥'],8,['蝦仁擦乾抓鹽。','蝦仁煎到變紅盛起。','蛋液加鹽和一匙水，小火倒入。','蛋半凝固時放回蝦仁，輕推起鍋。']],
+['蝦仁炒飯',['白飯','蝦仁'],['雞蛋','青蔥','玉米罐頭'],10,['蝦仁煎熟盛起。','炒蛋下飯炒散。','蝦仁回鍋，鹽、胡椒調味，撒蔥。']],
+['香腸荷包蛋蓋飯',['香腸','雞蛋'],['白飯','青蔥'],12,['香腸斜切片，小火煎到出油微焦。','同鍋煎一顆荷包蛋。','鋪在白飯上，淋一點醬油。']],
+['火腿炒蛋',['火腿','雞蛋'],['青蔥','玉米罐頭'],6,['火腿切丁。','和蛋液一起打勻。','熱油炒成大塊。']],
+['玉米濃湯',['玉米罐頭','牛奶'],['雞蛋','火腿','洋蔥'],12,['洋蔥丁炒軟（沒有可略）。','倒入玉米和牛奶、水各一碗煮滾。','麵粉或太白粉加水勾芡。','加鹽、胡椒，可倒入蛋花。']],
+['玉米炒蛋',['玉米罐頭','雞蛋'],['青蔥'],6,['玉米瀝乾。','和蛋、鹽打勻。','炒成大塊。']],
+['肉末茄子',['茄子','豬絞肉'],['青蔥','九層塔'],14,['茄子切段，微波 3 分鐘先軟化。','絞肉炒散加蒜末。','下茄子，加醬油、糖、水半碗燒 3 分鐘。']],
+['蒜香茄子',['茄子'],['九層塔'],10,['茄子切段，微波 3 分鐘。','油爆蒜末。','下茄子，醬油、糖、醋各一點拌炒入味。']],
+['九層塔煎蛋',['九層塔','雞蛋'],[],6,['九層塔切碎。','和蛋、鹽打勻。','油熱倒入，兩面煎香。']],
+['塔香打拋豬',['豬絞肉','九層塔'],['番茄','洋蔥','白飯'],10,['油爆蒜末，下絞肉炒散。','加醬油、糖、有魚露更好。','番茄丁一起炒軟。','關火前丟進九層塔拌勻，配飯。']],
+['肉末蒸蛋',['豬絞肉','雞蛋'],['青蔥'],15,['蛋 2 顆加 1.5 倍溫水、鹽打勻過篩。','絞肉加醬油抓勻鋪碗底。','倒蛋液，蓋盤子，電鍋或蒸鍋中火 12 分鐘。']],
+['嫩蒸蛋',['雞蛋'],['蝦仁','青蔥','菇類'],13,['蛋加 1.5 倍溫水、鹽打勻。','有蝦仁、菇放進去。','蓋盤子蒸 10 分鐘，淋醬油、撒蔥。']],
+['抱蛋煎餃',['冷凍水餃','雞蛋'],['青蔥'],12,['冷凍水餃排鍋中，加油煎 1 分鐘。','加水到水餃一半高，蓋鍋燜到水乾。','倒入蛋液加蔥，蓋鍋 1 分鐘定型。']],
+['酸辣湯餃',['冷凍水餃'],['雞蛋','豆腐','紅蘿蔔'],12,['水滾下水餃煮浮起。','另加豆腐條、紅蘿蔔絲，醬油、醋、胡椒調味。','勾一點芡，倒蛋花。']],
+['醬炒烏龍麵',['烏龍麵','高麗菜'],['豬肉片','培根','洋蔥','紅蘿蔔'],10,['烏龍麵燙 30 秒撥散。','炒肉片或培根，下高麗菜。','放麵，醬油 2 匙、糖少許、水 2 匙炒勻。']],
+['鍋燒烏龍麵',['烏龍麵','雞蛋'],['葉菜類','菇類','蝦仁','火腿'],12,['兩碗水加醬油、鹽煮滾。','放菇、蝦仁和麵。','打一顆蛋，蓋鍋 1 分鐘。','最後放青菜。']],
+['牛奶起司燉飯',['白飯','牛奶','起司片'],['培根','菇類','玉米罐頭','洋蔥'],12,['培根或菇類先炒香。','倒入白飯、牛奶一碗，小火攪拌。','放起司片 2 片融化，鹽、黑胡椒調味。']],
+['番茄炒飯',['白飯','番茄'],['雞蛋','洋蔥','培根'],10,['番茄切丁炒出汁，加一點糖鹽。','下飯拌炒到每粒都吸到番茄汁。','有蛋可先炒好拌入。']],
+['高麗菜炒肉片',['高麗菜','豬肉片'],['紅蘿蔔'],10,['肉片抓醬油。','肉炒變色，下高麗菜。','加 2 匙水燜軟，鹽調味。']],
+['豆腐蛋餅',['豆腐','雞蛋'],['青蔥'],12,['豆腐壓碎擠乾水。','和蛋、蔥、鹽拌勻。','鍋中壓成餅，兩面煎黃。']],
+['蒜香炒菇',['菇類'],['青蔥','培根'],7,['菇剝開，乾鍋炒到出水微焦。','加油、蒜末炒香。','醬油、黑胡椒調味。']],
+['青菜豆腐湯',['葉菜類','豆腐'],['菇類'],8,['水滾放豆腐丁。','放青菜煮 1 分鐘。','鹽、香油調味。']],
+['番茄燒豆腐',['番茄','豆腐'],['青蔥'],12,['番茄炒出汁，加糖、鹽、醬油少許。','加水半碗，放豆腐塊。','煮 5 分鐘收汁，撒蔥。']],
+['培根蛋麵',['麵條','培根','雞蛋'],['起司片','牛奶'],13,['煮麵，留半碗煮麵水。','培根煎出油，關火。','蛋黃加起司片碎、黑胡椒打勻。','麵入培根鍋，離火倒蛋液和一點麵水快速拌成醬。']],
+['高麗菜炒泡麵',['泡麵','高麗菜'],['培根','雞蛋','紅蘿蔔'],10,['泡麵煮 1 分鐘撈起瀝乾。','炒培根、高麗菜。','放麵，加半包調味粉和一點水炒乾。']],
+['平底鍋吐司披薩',['吐司','起司片'],['火腿','玉米罐頭','番茄','洋蔥','青椒','培根'],10,['吐司抹番茄醬（沒有就省略）。','鋪冰箱剩的料，蓋起司片。','平底鍋小火加蓋 4 分鐘到起司融化。']],
+['鮪魚小黃瓜沙拉',['鮪魚罐頭','小黃瓜'],['洋蔥','玉米罐頭'],5,['小黃瓜切片抓鹽 2 分鐘擠乾。','加鮪魚、玉米。','醬油、醋、胡椒拌勻。']],
+['茄汁鮪魚麵',['麵條','鮪魚罐頭','番茄'],['洋蔥'],13,['煮麵。','番茄炒出汁，加洋蔥丁、鹽、糖。','放鮪魚拌開。','麵拌進醬汁。']],
+['皮蛋豆腐',['豆腐','皮蛋'],['青蔥'],5,['豆腐盛盤，倒掉多餘的水。','皮蛋切丁鋪在豆腐上。','淋醬油 1 匙、糖少許、香油，撒蔥花。']],
+['皮蛋瘦肉粥',['白飯','皮蛋'],['豬肉片','青蔥'],15,['剩飯加 3 倍水煮滾，轉小火。','肉片抓鹽下鍋，皮蛋切丁放入。','煮到濃稠，鹽、胡椒調味，撒蔥。']],
+['皮蛋炒青菜',['葉菜類','皮蛋'],[],8,['皮蛋切丁，先下鍋炒香。','加蒜末、青菜大火快炒。','加鹽，菜軟就起鍋。']],
+['乾煎鹽鮭魚',['鮭魚'],[],12,['鮭魚擦乾，兩面抹薄鹽。','平底鍋不放油，皮朝下中火煎 5 分鐘。','翻面再煎 3 分鐘。']],
+['鮭魚炒飯',['白飯','鮭魚'],['雞蛋','青蔥','高麗菜'],13,['鮭魚煎熟壓碎、挑掉刺。','炒蛋後下飯炒散。','放鮭魚碎，鹽、胡椒調味。']],
+['奶油香煎鮭魚',['鮭魚','奶油'],['洋蔥','菇類'],12,['鮭魚兩面煎到金黃。','放奶油、蒜末和菇類。','淋一點醬油，把醬汁澆在魚上。']],
+['蛤蜊絲瓜',['絲瓜','蛤蜊'],[],12,['絲瓜削皮切塊。','爆香蒜末，下絲瓜炒軟，加少許水。','放吐好沙的蛤蜊，蓋鍋煮到開口。']],
+['蛤蜊湯',['蛤蜊'],['青蔥'],8,['水煮滾放蛤蜊。','開口就關火，加鹽。','撒蔥花，有薑絲更好。']],
+['蛤蜊蒸蛋',['蛤蜊','雞蛋'],[],15,['蛤蜊燙到開口，湯留著放涼。','蛋加 1.5 倍蛤蜊湯打勻。','放上蛤蜊，蓋盤子蒸 10 分鐘。']],
+['蒜炒蛤蜊麵',['麵條','蛤蜊'],['九層塔','青蔥'],13,['煮麵。','蒜片炒香，放蛤蜊加少許水蓋鍋。','開口後拌入麵、鹽，最後丟九層塔。']],
+['火鍋料泡麵',['泡麵','火鍋料'],['高麗菜','雞蛋'],8,['水滾先下火鍋料煮 3 分鐘。','放麵和調味包。','有高麗菜、蛋就一起下。']],
+['火鍋料湯烏龍',['烏龍麵','火鍋料'],['葉菜類','菇類'],10,['水加醬油、鹽煮滾，下火鍋料。','放烏龍麵煮 2 分鐘。','最後放青菜。']],
+['關東煮風白蘿蔔',['白蘿蔔','火鍋料'],[],15,['白蘿蔔切薄片才熟得快。','水加醬油、糖煮滾，放蘿蔔煮 8 分鐘。','放火鍋料再煮 3 分鐘。']],
+['火鍋料炒高麗菜',['火鍋料','高麗菜'],['紅蘿蔔'],8,['火鍋料切片。','先煎火鍋料到微焦。','下高麗菜炒軟，鹽調味。']],
+['豆芽炒韭菜',['豆芽菜','韭菜'],[],5,['韭菜切段。','大火爆香蒜，下豆芽炒 1 分鐘。','放韭菜、鹽快炒起鍋。']],
+['涼拌豆芽',['豆芽菜'],['紅蘿蔔','小黃瓜'],5,['豆芽燙 30 秒，泡冷水。','擠乾水分。','加醬油、醋、糖、香油、蒜末拌勻。']],
+['豆芽炒肉絲',['豆芽菜','豬肉片'],['青蔥'],8,['肉切絲抓醬油。','肉炒變色。','下豆芽大火快炒，鹽調味。']],
+['豆芽炒麵',['麵條','豆芽菜'],['豬肉片','雞蛋','高麗菜'],12,['麵煮八分熟瀝乾。','炒肉片或蛋，下豆芽。','放麵，醬油 2 匙、糖少許拌炒。']],
+['絲瓜炒蛋',['絲瓜','雞蛋'],[],10,['絲瓜削皮切塊。','蛋炒半熟盛起。','炒絲瓜到出水變軟，蛋回鍋，加鹽。']],
+['絲瓜湯麵',['麵條','絲瓜'],['蛤蜊','雞蛋'],13,['絲瓜塊用油炒軟。','加兩碗水煮滾，鹽調味。','麵另外煮好放進湯裡。']],
+['南瓜炒米粉',['米粉','南瓜'],['豬肉片','高麗菜'],15,['米粉泡溫水 5 分鐘。','南瓜刨絲炒軟。','放米粉、水半碗、醬油、鹽，拌炒到吸乾。']],
+['微波蒸南瓜',['南瓜'],['奶油'],8,['南瓜切小塊。','加 2 匙水，蓋保鮮膜微波 6 分鐘。','撒鹽，有奶油就拌一塊。']],
+['南瓜濃湯',['南瓜','牛奶'],['洋蔥','奶油'],15,['南瓜切小塊微波 6 分鐘。','壓成泥，加牛奶一碗煮滾。','鹽、胡椒調味。']],
+['南瓜燉飯',['白飯','南瓜'],['起司片','培根','牛奶'],15,['南瓜微波軟後壓泥。','和白飯、少許水或牛奶一起煮。','放起司片拌到濃稠，鹽、胡椒調味。']],
+['金沙南瓜炒蛋',['南瓜','雞蛋'],[],12,['南瓜切薄片微波 3 分鐘。','煎到微焦。','倒入蛋液拌炒，加鹽。']],
+['微波烤地瓜',['地瓜'],[],10,['地瓜洗淨，用濕紙巾包起來。','微波 4 分鐘，翻面再 3 到 4 分鐘。','筷子插得進去就好了。']],
+['地瓜稀飯',['白飯','地瓜'],[],15,['地瓜切小丁。','剩飯加 3 倍水和地瓜煮滾。','小火煮 10 分鐘到地瓜軟。']],
+['地瓜煎餅',['地瓜','雞蛋'],['牛奶'],13,['地瓜微波熟後壓泥。','加蛋、2 匙麵粉（或牛奶）拌勻。','小火煎成小圓餅。']],
+['白蘿蔔肉片湯',['白蘿蔔','豬肉片'],['青蔥'],15,['白蘿蔔切薄片。','水滾煮蘿蔔 8 分鐘。','下肉片煮熟，鹽、胡椒調味。']],
+['醬燒白蘿蔔',['白蘿蔔'],['豬絞肉'],15,['白蘿蔔切薄片。','炒到邊緣透明。','加醬油 2 匙、糖 1 匙、水半碗燜 8 分鐘，收汁。']],
+['蒜炒花椰菜',['花椰菜'],['紅蘿蔔'],8,['花椰菜切小朵，燙 1 分鐘。','爆香蒜末。','下花椰菜快炒，加鹽。']],
+['花椰菜炒蝦仁',['花椰菜','蝦仁'],[],10,['花椰菜切小朵燙 1 分鐘。','蝦仁煎到變紅。','花椰菜回鍋，鹽、胡椒調味。']],
+['培根炒花椰菜',['花椰菜','培根'],[],10,['花椰菜燙 1 分鐘。','培根煎出油。','下花椰菜拌炒，黑胡椒調味。']],
+['花椰菜炒肉片',['花椰菜','豬肉片'],[],10,['花椰菜燙 1 分鐘。','肉片炒變色。','花椰菜下鍋，醬油、鹽調味。']],
+['花椰菜炒蛋',['花椰菜','雞蛋'],[],10,['花椰菜切碎燙 1 分鐘。','蛋炒半熟。','花椰菜下鍋拌炒，加鹽。']],
+['泡菜炒飯',['白飯','泡菜'],['雞蛋','豬肉片','起司片','培根'],10,['泡菜切碎，先炒香。','下飯和一點泡菜汁炒勻。','有蛋煎一顆蓋上，有起司就放上去。']],
+['泡菜炒豬肉',['泡菜','豬肉片'],['洋蔥'],10,['豬肉片炒變色。','放泡菜和洋蔥一起炒。','加一點糖平衡酸味。']],
+['泡菜豆腐鍋',['泡菜','豆腐'],['豬肉片','火鍋料','雞蛋','菇類'],15,['泡菜炒香，加兩碗水煮滾。','放豆腐和肉片、火鍋料。','煮 5 分鐘，最後打顆蛋。']],
+['泡菜泡麵',['泡麵','泡菜'],['起司片','雞蛋'],8,['水滾下麵和泡菜。','放一半調味包就夠。','起鍋前放起司片。']],
+['泡菜煎餅',['泡菜','雞蛋'],['青蔥'],12,['泡菜切碎。','加蛋、3 匙麵粉、一點泡菜汁和水拌成糊。','鍋子多放點油，兩面煎脆。']],
+['韓式炒年糕',['年糕','泡菜'],['火鍋料','高麗菜','洋蔥'],15,['年糕泡熱水 3 分鐘。','泡菜、洋蔥炒香，加半碗水和糖 1 匙。','放年糕、火鍋料煮到醬汁濃稠。']],
+['醬炒年糕',['年糕','高麗菜'],['豬肉片'],13,['年糕泡熱水軟化。','炒肉片、高麗菜。','放年糕，加醬油、糖、水炒到入味。']],
+['青菜年糕湯',['年糕','葉菜類'],['火鍋料','雞蛋'],12,['水加醬油、鹽煮滾。','放年糕煮 5 分鐘。','放青菜，可以倒蛋花。']],
+['台式炒米粉',['米粉','高麗菜'],['豬肉片','紅蘿蔔','菇類'],15,['米粉泡溫水 5 分鐘剪段。','炒肉、菇、高麗菜。','放米粉和水半碗、醬油，邊炒邊拌到吸乾。']],
+['米粉湯',['米粉','葉菜類'],['豬肉片','火鍋料','菇類'],12,['水滾放肉片、火鍋料。','放米粉煮 3 分鐘。','放青菜，鹽、胡椒調味。']],
+['饅頭夾蛋',['饅頭','雞蛋'],['起司片','火腿','青蔥'],8,['饅頭微波 1 分鐘加熱。','煎一顆蔥蛋。','對切夾蛋，有起司火腿一起夾。']],
+['香煎饅頭片',['饅頭'],['雞蛋','牛奶'],8,['饅頭切 1 公分片。','沾蛋液（加牛奶更香）。','小火煎到兩面金黃。']],
+['奶油玉米',['玉米罐頭','奶油'],[],5,['玉米瀝乾。','奶油融化後下玉米炒 2 分鐘。','撒鹽、黑胡椒。']],
+['奶油炒菇',['菇類','奶油'],['青蔥'],7,['菇類乾煎到出水。','放奶油、蒜末炒香。','醬油一點起鍋。']],
+['奶油醬油炒飯',['白飯','奶油'],['雞蛋','玉米罐頭','培根','青蔥'],8,['奶油融化，下飯炒散。','沿鍋邊淋醬油 1 匙。','加配料拌勻。']],
+['奶油蒜香吐司',['吐司','奶油'],[],6,['奶油軟化，拌蒜末和一點鹽。','抹在吐司上。','平底鍋小火煎到金黃。']],
+['起司歐姆蛋',['雞蛋','起司片'],['火腿','洋蔥','牛奶'],8,['蛋加一點牛奶、鹽打勻。','小火倒入，邊緣凝固時放起司片。','對折，蓋鍋 30 秒。']],
+['牛奶滑蛋',['雞蛋','牛奶'],['奶油'],5,['蛋 2 顆加牛奶 2 匙、鹽打勻。','小火，用鍋鏟慢慢推。','還有點濕潤就關火。']],
+['奶香馬鈴薯泥',['馬鈴薯','牛奶'],['奶油','培根'],15,['馬鈴薯切小塊，微波 6 分鐘。','壓成泥，加牛奶和奶油。','鹽、黑胡椒調味。']],
+['馬鈴薯炒肉片',['馬鈴薯','豬肉片'],['紅蘿蔔','洋蔥'],15,['馬鈴薯切薄片，微波 3 分鐘。','肉片炒變色。','放馬鈴薯，醬油、糖、少許水燒 3 分鐘。']],
+['番茄炒高麗菜',['番茄','高麗菜'],[],10,['番茄炒出汁。','下高麗菜。','燜 2 分鐘，加鹽、一點糖。']],
+['茄汁蝦仁',['番茄','蝦仁'],['洋蔥','青蔥'],10,['蝦仁煎熟盛起。','番茄炒成醬，加糖、鹽。','蝦仁回鍋拌勻。']],
+['番茄燉雞胸',['番茄','雞胸肉'],['洋蔥'],15,['雞胸切小塊抓鹽。','煎到表面變白。','加番茄塊、水半碗，蓋鍋燉 6 分鐘。']],
+['番茄洋蔥湯',['番茄','洋蔥'],['高麗菜','培根'],15,['洋蔥、番茄切塊炒軟。','加兩碗水煮 10 分鐘。','鹽、胡椒調味（羅宋湯風味）。']],
+['番茄起司吐司',['吐司','番茄','起司片'],[],8,['番茄切薄片鋪在吐司上。','蓋起司片。','平底鍋小火加蓋 4 分鐘。']],
+['小黃瓜炒肉片',['小黃瓜','豬肉片'],['紅蘿蔔'],8,['小黃瓜切片。','肉片炒變色。','下小黃瓜快炒 1 分鐘，加鹽。']],
+['小黃瓜炒蛋',['小黃瓜','雞蛋'],[],7,['小黃瓜切片。','蛋炒半熟盛起。','炒小黃瓜，蛋回鍋，加鹽。']],
+['涼拌小黃瓜雞絲',['小黃瓜','雞胸肉'],[],15,['雞胸切薄片，水煮 5 分鐘後撕絲。','小黃瓜切絲。','醬油、醋、糖、香油、蒜末拌勻。']],
+['青椒炒雞丁',['雞胸肉','青椒'],['紅蘿蔔'],12,['雞胸切丁抓醬油。','雞丁炒到變白。','下青椒快炒，鹽調味。']],
+['菇菇雞胸',['雞胸肉','菇類'],['洋蔥'],12,['雞胸切片抓醬油。','雞片煎熟。','放菇類炒出水，醬油、黑胡椒調味。']],
+['雞肉炒飯',['白飯','雞胸肉'],['雞蛋','玉米罐頭','青蔥'],13,['雞胸切小丁炒熟。','炒蛋下飯炒散。','雞丁回鍋，鹽、胡椒調味。']],
+['快速三杯雞',['雞腿肉','九層塔'],['青蔥'],15,['雞腿切塊，煎到出油金黃。','加醬油 2 匙、糖 1 匙，有米酒、麻油更好。','蓋鍋 5 分鐘，收汁後丟九層塔。']],
+['肉末炒蛋',['豬絞肉','雞蛋'],['青蔥'],8,['絞肉炒散加醬油。','倒入蛋液。','炒到蛋凝固，撒蔥。']],
+['快速肉燥飯',['豬絞肉','白飯'],['雞蛋','洋蔥'],15,['絞肉炒到出油微焦。','加醬油 3 匙、糖 1 匙、水半碗，有五香粉更像。','小火煮 10 分鐘，淋在飯上。']],
+['肉末炒高麗菜',['豬絞肉','高麗菜'],[],10,['絞肉炒散。','下高麗菜炒軟。','醬油、鹽調味。']],
+['青菜肉丸湯',['豬絞肉','葉菜類'],['冬粉'],12,['絞肉加鹽、胡椒、醬油，摔打成團。','水滾用湯匙挖成丸子下鍋。','浮起後放青菜和冬粉。']],
+['培根炒蛋',['培根','雞蛋'],[],6,['培根切段煎出油。','倒入蛋液。','炒到凝固，黑胡椒調味。']],
+['番茄培根麵',['麵條','培根','番茄'],['洋蔥'],15,['煮麵。','培根煎出油，下番茄炒成醬。','麵拌進醬裡，鹽、糖、胡椒調味。']],
+['培根炒洋蔥',['培根','洋蔥'],[],7,['培根煎出油。','下洋蔥絲炒到微焦。','黑胡椒調味，配飯配麵都行。']],
+['火腿起司三明治',['吐司','火腿','起司片'],['小黃瓜','雞蛋'],5,['吐司鋪起司、火腿。','有小黃瓜片就加。','乾鍋兩面各煎 1 分鐘。']],
+['火腿炒高麗菜',['火腿','高麗菜'],[],8,['火腿切絲。','炒高麗菜到軟。','放火腿拌炒，加鹽。']],
+['香腸炒飯',['白飯','香腸'],['雞蛋','青蔥'],10,['香腸切丁煎出油。','下飯炒散。','加蛋拌炒，撒蔥。']],
+['香腸炒青椒',['香腸','青椒'],['洋蔥'],8,['香腸斜切片煎香。','下青椒、洋蔥。','快炒 2 分鐘起鍋。']],
+['蝦仁燒豆腐',['蝦仁','豆腐'],['青蔥'],12,['豆腐切塊煎黃。','蝦仁下鍋。','加醬油、水、糖少許燒 3 分鐘，撒蔥。']],
+['韭菜炒蝦仁',['蝦仁','韭菜'],[],8,['蝦仁煎熟。','下韭菜段。','大火快炒，鹽調味。']],
+['鮪魚飯糰',['白飯','鮪魚罐頭'],['玉米罐頭'],8,['鮪魚瀝油，加胡椒（有美乃滋更好）。','手沾鹽水，飯包入鮪魚。','捏成三角形，可以包保鮮膜帶出門。']],
+['鮪魚煎蛋',['鮪魚罐頭','雞蛋'],['洋蔥','青蔥'],8,['鮪魚瀝油，和蛋打勻。','加蔥或洋蔥丁。','煎成蛋餅狀。']],
+['鮪魚馬鈴薯沙拉',['鮪魚罐頭','馬鈴薯'],['小黃瓜','玉米罐頭','雞蛋'],15,['馬鈴薯切塊微波 6 分鐘，壓泥。','加鮪魚、玉米、小黃瓜。','鹽、胡椒（有美乃滋就加）拌勻。']],
+['家常豆腐',['豆腐','青椒'],['豬肉片','紅蘿蔔'],13,['豆腐切片煎黃。','炒肉片、青椒。','豆腐回鍋，醬油、糖、水燒 2 分鐘。']],
+['快滷豆干',['豆干'],['雞蛋'],15,['豆干切條。','醬油 3 匙、糖 1 匙、水一碗煮滾。','放豆干小火煮 10 分鐘。']],
+['豆干炒高麗菜',['豆干','高麗菜'],[],10,['豆干切條煎香。','下高麗菜炒軟。','醬油、鹽調味。']],
+['青菜炒肉末',['葉菜類','豬絞肉'],[],8,['絞肉炒散，加醬油。','下青菜大火快炒。','加鹽起鍋。']],
+['青菜炒菇',['葉菜類','菇類'],[],7,['菇類先炒出水。','下青菜。','加鹽快炒起鍋。']],
+['青菜蛋花湯',['葉菜類','雞蛋'],[],8,['水滾加鹽。','放青菜煮 1 分鐘。','倒蛋花，滴香油。']],
+['菇菇蛋花湯',['菇類','雞蛋'],['青蔥'],8,['菇類放水裡煮 3 分鐘。','鹽、胡椒調味。','倒蛋花，撒蔥。']],
+['奶油菇菇麵',['麵條','菇類','牛奶'],['培根','起司片'],15,['煮麵。','菇類（和培根）炒香，倒牛奶一碗。','放起司片融化成醬，拌麵。']],
+['高麗菜煎餅',['高麗菜','雞蛋'],['培根','火鍋料'],14,['高麗菜切細絲。','加蛋、3 匙麵粉、少許水拌勻。','兩面煎黃，淋醬油膏或美乃滋。']],
+['快速高麗菜飯',['白飯','高麗菜'],['香腸','紅蘿蔔','菇類'],12,['香腸、菇類炒香。','下高麗菜炒軟。','加飯和醬油拌炒均勻。']],
+['青椒炒蛋',['青椒','雞蛋'],[],7,['青椒切絲。','蛋炒半熟盛起。','炒青椒，蛋回鍋，加鹽。']],
+['紅蘿蔔炒肉絲',['紅蘿蔔','豬肉片'],[],10,['紅蘿蔔刨絲炒軟。','下肉絲炒熟。','醬油、鹽調味。']],
+['茄子炒肉片',['茄子','豬肉片'],[],13,['茄子切段微波 3 分鐘。','肉片炒變色。','下茄子，醬油、糖燒 2 分鐘。']],
+['塔香蛤蜊',['蛤蜊','九層塔'],[],8,['爆香蒜片。','放蛤蜊加 2 匙水蓋鍋。','開口後丟九層塔拌勻。']],
+['韭菜炒肉絲',['韭菜','豬肉片'],[],8,['肉絲抓醬油炒熟。','下韭菜段。','大火快炒，鹽調味。']],
+['冬粉湯',['冬粉','葉菜類'],['火鍋料','豆腐','蝦仁'],10,['水滾放火鍋料或豆腐。','冬粉下鍋煮 3 分鐘。','放青菜，鹽、胡椒調味。']],
+['涼拌冬粉',['冬粉','小黃瓜'],['紅蘿蔔','火腿'],10,['冬粉燙 2 分鐘泡冷水。','小黃瓜、火腿切絲。','醬油、醋、糖、香油拌勻。']],
+['青菜水餃湯',['冷凍水餃','葉菜類'],['雞蛋','火鍋料'],10,['水滾下水餃，浮起後再煮 2 分鐘。','放青菜。','加鹽、胡椒，可倒蛋花。']],
+['蔥油乾拌泡麵',['泡麵','青蔥'],['雞蛋'],6,['麵煮 2 分鐘瀝乾。','拌調味粉一半、醬油一點、香油。','撒大把蔥花，加顆荷包蛋。']],
+['吐司蛋沙拉',['吐司','雞蛋'],['小黃瓜','火腿'],12,['蛋煮 10 分鐘成白煮蛋。','壓碎，加鹽、胡椒（有美乃滋就加）。','夾進吐司。']],
+['奶油醬油烏龍',['烏龍麵','奶油'],['菇類','培根','雞蛋'],8,['烏龍麵燙 30 秒。','奶油炒菇或培根。','放麵，淋醬油拌勻。']],
+['快速炸醬麵',['麵條','豬絞肉'],['小黃瓜'],15,['絞肉炒到出油。','加醬油 2 匙、糖 1 匙、少許水燒 5 分鐘（有豆瓣醬更香）。','淋在麵上，放小黃瓜絲。']],
+['陽春湯麵',['麵條','葉菜類'],['青蔥'],8,['碗裡放醬油 1 匙、鹽、香油、蔥。','麵和青菜一起煮熟。','連湯倒進碗裡。']],
+['蛋包飯',['白飯','雞蛋'],['番茄','洋蔥','火腿'],15,['飯和配料炒勻（有番茄醬就加）。','蛋液煎成薄蛋皮。','把飯放上蛋皮包起來。']],
+['火鍋料鹹粥',['白飯','火鍋料'],['葉菜類','雞蛋','菇類'],12,['剩飯加 3 倍水煮滾。','放火鍋料、菇類煮 5 分鐘。','鹽、胡椒調味，放青菜。']],
+['醬油荷包蛋拌飯',['白飯','雞蛋'],['青蔥'],5,['煎一顆半熟荷包蛋。','鋪在熱飯上。','淋醬油、香油，戳破蛋黃拌開。']],
+['牛奶茶碗蒸',['雞蛋','牛奶'],['火鍋料'],13,['蛋加 1.5 倍牛奶和水、鹽打勻。','過篩倒入碗中。','蓋盤子蒸 10 分鐘。']],
+['起司馬鈴薯餅',['馬鈴薯','起司片'],['培根'],15,['馬鈴薯微波 6 分鐘壓泥。','包入起司片，壓成餅。','煎到兩面金黃。']],
+['絲瓜蝦仁',['絲瓜','蝦仁'],[],10,['絲瓜削皮切塊炒軟。','放蝦仁。','煮到蝦仁變紅，加鹽。']]
+];
+
+const STAPLES=['鹽','油','醬油','糖','胡椒','蒜頭'];
+const CONFIG={
+  siteUrl:'https://onlyhandrubbing.github.io/bingxiang/',
+  shopee:{affiliateId:'',subId:'fridge'},
+  gear:[['玻璃保鮮盒','玻璃保鮮盒'],['夾鏈袋','食物夾鏈袋'],['冰箱收納盒','冰箱收納盒'],['真空封口機','真空封口機']],
+  adsense:{client:'',slot:''}
+};
+const EMO={雞蛋:'🥚',豬絞肉:'🥩',豬肉片:'🥩',雞胸肉:'🍗',雞腿肉:'🍗',培根:'🥓',火腿:'🍖',香腸:'🌭',蝦仁:'🦐',鮭魚:'🐟',蛤蜊:'🦪',火鍋料:'🍢',鮪魚罐頭:'🥫',高麗菜:'🥬',番茄:'🍅',洋蔥:'🧅',青蔥:'🌱',青椒:'🫑',紅蘿蔔:'🥕',馬鈴薯:'🥔',菇類:'🍄',葉菜類:'🥬',小黃瓜:'🥒',茄子:'🍆',韭菜:'🌿',九層塔:'🌿',豆芽菜:'🌱',南瓜:'🎃',地瓜:'🍠',花椰菜:'🥦',泡菜:'🌶️',玉米罐頭:'🌽',白飯:'🍚',麵條:'🍜',泡麵:'🍜',烏龍麵:'🍲',吐司:'🍞',冷凍水餃:'🥟',牛奶:'🥛',起司片:'🧀',奶油:'🧈'};
+const COMMON=['雞蛋','白飯','高麗菜','番茄','洋蔥','青蔥','豆腐','豬肉片','麵條','葉菜類','吐司','泡麵'];
+const ico=(n,cls='e')=>EMO[n]?`<span class="${cls}">${EMO[n]}</span>`:`<span class="${cls} txt">${n.slice(-1)}</span>`;
+const icoT=n=>EMO[n]||n;
+function buyUrl(q){const base='https://shopee.tw/search?keyword='+encodeURIComponent(q);const a=CONFIG.shopee;return a.affiliateId?'https://s.shopee.tw/an_redir?origin_link='+encodeURIComponent(base)+'&affiliate_id='+a.affiliateId+'&sub_id='+a.subId:base}
+const $=id=>document.getElementById(id);
+const LS={get(k,d){try{const v=localStorage.getItem(k);return v?JSON.parse(v):d}catch(e){return d}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
+let sel=new Set(LS.get('fr_sel',['雞蛋','番茄','青蔥'])),exp=new Set(LS.get('fr_exp',[])),staplesOn=new Set(LS.get('fr_staples',STAPLES));
+let bento=LS.get('fr_bento',120),ledger=LS.get('fr_ledger',[]);
+const save=()=>{LS.set('fr_sel',[...sel]);LS.set('fr_exp',[...exp]);LS.set('fr_staples',[...staplesOn])};
+let showAll=false,query='';
+
+/* ---------- matching ---------- */
+function score(r){const[,need,opt]=r;const missing=need.filter(n=>!sel.has(n));if(missing.length>1)return null;const used=[...need,...opt].filter(n=>sel.has(n));return{r,missing,used,full:!missing.length,hot:used.filter(n=>exp.has(n)).length}}
+function match(){if(!sel.size)return[];return R.map(score).filter(m=>m&&m.used.length).sort((a,b)=>(b.full-a.full)||(b.hot-a.hot)||(b.used.length-a.used.length)||(a.r[3]-b.r[3]))}
+function money(m){const buy=m.missing.reduce((s,n)=>s+(PRICE[n]||0),0),rescued=m.used.reduce((s,n)=>s+(PRICE[n]||0),0);return{buy,rescued,saved:Math.max(0,bento-buy)}}
+
+/* ---------- pick ---------- */
+const rot=n=>{let h=0;for(const c of n)h=(h*31+c.charCodeAt(0))%997;return((h%7)-3)*0.8+'deg'};
+function sticker(n){const st=exp.has(n)?'hot':sel.has(n)?'on':'';return`<button class="st ${st}" type="button" data-n="${n}" style="--r:${rot(n)}" aria-pressed="${sel.has(n)}">${ico(n)}${n}</button>`}
+function drawShelves(){const box=$('shelves');const q=query.trim();
+  if(q){const hits=CATS.flatMap(c=>c[1].map(x=>x[0])).filter(n=>n.includes(q));box.innerHTML=hits.length?`<div class="shelf">${hits.map(sticker).join('')}</div>`:`<p class="tip">冰箱清單裡沒有「${q}」，試試別的說法。</p>`;return}
+  let h=`<div class="shelf-label">最常剩的</div><div class="shelf">${COMMON.map(sticker).join('')}</div>`;
+  const extra=[...sel].filter(n=>!COMMON.includes(n));
+  if(!showAll){if(extra.length)h+=`<div class="shelf-label">你選的</div><div class="shelf">${extra.map(sticker).join('')}</div>`;h+=`<button class="more" id="moreBtn" type="button">看全部 50 種食材 ↓</button>`}
+  else{CATS.forEach(([c,items])=>{const list=items.map(x=>x[0]).filter(n=>!COMMON.includes(n));if(list.length)h+=`<div class="shelf-label">${c}</div><div class="shelf">${list.map(sticker).join('')}</div>`});h+=`<button class="more" id="moreBtn" type="button">收起來 ↑</button>`}
+  box.innerHTML=h;const mb=$('moreBtn');mb&&mb.addEventListener('click',()=>{showAll=!showAll;drawShelves()})}
+$('shelves').addEventListener('click',e=>{const b=e.target.closest('.st');if(!b)return;const n=b.dataset.n;
+  if(!sel.has(n)){sel.add(n)}else if(!exp.has(n)){exp.add(n)}else{sel.delete(n);exp.delete(n)}
+  save();drawShelves();drawTray()});
+$('q').addEventListener('input',e=>{query=e.target.value;drawShelves()});
+function drawTray(){const list=match();const full=list.filter(m=>m.full).length;
+  $('picked').innerHTML=sel.size?[...sel].map(n=>EMO[n]?`<span title="${n}">${EMO[n]}</span>`:`<span class="txt">${n}</span>`).join(''):'<span style="font-size:14px;opacity:.75;align-self:center">還沒選食材</span>';
+  $('goBtn').disabled=!list.length;$('goBtn').textContent=list.length?`想 ${full||list.length} 道菜 →`:(sel.size?'再多選一樣':'幫我想菜')}
+$('goBtn').addEventListener('click',()=>openDeck());
+
+/* ---------- deck ---------- */
+let deck=[],di=0;
+function openDeck(){deck=match().slice(0,20);di=0;show('deck');drawDeck()}
+function plateHTML(r){const items=[...r[1],...r[2].filter(n=>sel.has(n))].slice(0,5);const pos=[[50,46],[24,30],[70,24],[28,66],[68,66]];
+  return`<div class="plate" aria-hidden="true">${items.map((n,i)=>{const[x,y]=pos[i];return EMO[n]?`<i style="left:${x}%;top:${y}%;transform:translate(-50%,-50%) rotate(${(i*37)%30-15}deg)">${EMO[n]}</i>`:`<i class="txt" style="left:${x}%;top:${y}%;transform:translate(-50%,-50%)">${n}</i>`}).join('')}</div>`}
+function cardHTML(m){const[name,need,opt,t]=m.r;const mo=money(m);
+  const facts=[`<span>⏱ ${t} 分鐘</span>`];if(m.hot)facts.push(`<span class="hotf">救 ${m.hot} 樣快壞的</span>`);if(m.missing.length)facts.push(`<span class="miss">還差 ${m.missing[0]}</span>`);else facts.push('<span>不用另外買</span>');
+  return`<div class="stamp"><div><small>省下</small><b>${mo.saved}</b><small>元</small></div></div>${plateHTML(m.r)}<h2>${name}</h2><div class="facts">${facts.join('')}</div>
+   <p class="note">用掉你的 ${m.used.map(icoT).join(' ')}${m.missing.length?`　·　沒有${m.missing[0]}？<a href="${buyUrl(m.missing[0])}" target="_blank" rel="noopener sponsored">線上買</a>或省略`:''}</p>
+   <div class="btns"><button class="btn" type="button" data-act="next">換一道</button><button class="btn red" type="button" data-act="cook">就煮這個！</button></div>`}
+function drawDeck(){const d=$('deck');
+  if(!deck.length){d.innerHTML='<div class="empty"><h2>這組合還想不到菜</h2><p>多選一樣常見的，例如雞蛋或白飯。</p></div>';$('dots').innerHTML='';return}
+  $('haveTxt').textContent=`${[...sel].map(icoT).join('')} → ${deck.length} 道`;
+  d.innerHTML='';[2,1,0].forEach(k=>{const m=deck[(di+k)%deck.length];if(k>0&&deck.length<=k)return;const el=document.createElement('article');el.className='card '+(k===0?'front pop':k===1?'behind':'behind2');el.innerHTML=k===0?cardHTML(m):'';if(k===0)el.setAttribute('aria-label',m.r[0]);d.appendChild(el)});
+  const front=d.querySelector('.front');d.style.minHeight=front.offsetHeight+30+'px';
+  front.addEventListener('click',e=>{const a=e.target.closest('[data-act]');if(!a)return;if(a.dataset.act==='next')next(1);else startCook(deck[di])});
+  swipe(front);
+  $('dots').innerHTML=deck.slice(0,Math.min(deck.length,10)).map((_,i)=>`<i class="${i===di%10?'on':''}"></i>`).join('')}
+function next(dir){di=(di+dir+deck.length)%deck.length;drawDeck()}
+function swipe(el){let x0=null,dx=0;el.addEventListener('pointerdown',e=>{if(e.target.closest('button,a'))return;x0=e.clientX;el.setPointerCapture(e.pointerId);el.style.transition='none'});
+  el.addEventListener('pointermove',e=>{if(x0==null)return;dx=e.clientX-x0;el.style.transform=`translateX(${dx}px) rotate(${dx/20}deg)`});
+  const end=()=>{if(x0==null)return;el.style.transition='';x0=null;if(Math.abs(dx)>80){next(dx<0?1:-1)}else el.style.transform='';dx=0};
+  el.addEventListener('pointerup',end);el.addEventListener('pointercancel',end)}
+$('backPick').addEventListener('click',()=>show('pick'));
+
+/* ---------- cook ---------- */
+let cur=null,si=0;
+function startCook(m){cur=m;si=0;show('cook');$('cookName').textContent=m.r[0];$('cookTime').textContent=`⏱ ${m.r[3]} 分鐘`;
+  $('cookIng').innerHTML=[...m.r[1],...m.r[2].filter(n=>sel.has(n))].map(n=>`<span>${icoT(n)} ${n}</span>`).join('');drawStep()}
+function drawStep(){const st=cur.r[4];$('stepNo').textContent=`第 ${si+1} 步，共 ${st.length} 步`;$('stepText').textContent=st[si];$('cookProg').style.width=((si+1)/st.length*100)+'%';
+  $('prevStep').disabled=si===0;$('nextStep').textContent=si===st.length-1?`煮好了！存 ${money(cur).saved} 元`:'下一步'}
+$('prevStep').addEventListener('click',()=>{if(si>0){si--;drawStep()}});
+$('nextStep').addEventListener('click',e=>{if(si<cur.r[4].length-1){si++;drawStep();return}
+  const mo=money(cur);ledger.unshift({d:new Date().toISOString(),n:cur.r[0],s:mo.saved,r:mo.rescued});ledger=ledger.slice(0,300);LS.set('fr_ledger',ledger);
+  cur.used.forEach(n=>{sel.delete(n);exp.delete(n)});save();coins(e.target);drawPig();
+  toast(`存進 ${mo.saved} 元！用掉的食材已從冰箱拿掉`);setTimeout(()=>{show('pick');drawShelves();drawTray()},900)});
+$('backDeck').addEventListener('click',()=>show('deck'));
+function coins(from){const a=from.getBoundingClientRect(),b=$('pigBtn').getBoundingClientRect();for(let i=0;i<5;i++){const c=document.createElement('div');c.className='coin';c.textContent='🪙';c.style.left=a.left+a.width/2+(i-2)*14+'px';c.style.top=a.top+'px';c.style.setProperty('--dx',(b.left-a.left-a.width/2)+'px');c.style.setProperty('--dy',(b.top-a.top)+'px');c.style.animationDelay=i*70+'ms';document.body.appendChild(c);setTimeout(()=>c.remove(),1200)}}
+
+/* ---------- week ---------- */
+let wDays=LS.get('fr_wdays',5),wPpl=LS.get('fr_wppl',1),lastPlan='';
+const PF={1:1,2:1.8,4:3.4},CAP=n=>['雞蛋','白飯','青蔥'].includes(n)?2:1;
+function pills(id,vals,get,set,f){const box=$(id);box.innerHTML=vals.map(v=>`<button class="pill" type="button" data-v="${v}" aria-pressed="${get()===v}">${f(v)}</button>`).join('');box.onclick=e=>{const b=e.target.closest('.pill');if(!b)return;set(+b.dataset.v);pills(id,vals,get,set,f)}}
+pills('wDays',[3,5,7],()=>wDays,v=>{wDays=v;LS.set('fr_wdays',v)},v=>v+' 天');
+pills('wPpl',[1,2,4],()=>wPpl,v=>{wPpl=v;LS.set('fr_wppl',v)},v=>v+' 人');
+function plan(){const f=PF[wPpl]||1;const fu={};sel.forEach(n=>fu[n]=0);const bought={},used=new Set(),days=[];
+  for(let d=0;d<wDays;d++){let best=null,bs=-1e9;
+    for(const r of R){if(used.has(r[0]))continue;const[,need,opt]=r;let sc=Math.random()*0.6;
+      for(const n of need){if(n in fu&&fu[n]<CAP(n))sc+=fu[n]===0?(exp.has(n)?6:4):2;else if(bought[n]&&bought[n].left>0)sc+=2.5;else sc-=(PRICE[n]||20)/12}
+      for(const n of opt)if((n in fu&&fu[n]<CAP(n))||(bought[n]&&bought[n].left>0))sc+=0.5;
+      const last=days.slice(-2).flatMap(x=>x.r[1]);sc-=need.filter(n=>last.includes(n)).length*0.8;
+      if(sc>bs){bs=sc;best=r}}
+    if(!best)break;used.add(best[0]);const buy=[];
+    for(const n of best[1]){if(n in fu&&fu[n]<CAP(n)){fu[n]++;continue}if(bought[n]&&bought[n].left>0){bought[n].left--;continue}
+      if(!bought[n])bought[n]={qty:0,cost:0,left:0};bought[n].qty++;bought[n].cost+=Math.round((PRICE[n]||20)*f);bought[n].left=1;buy.push(n)}
+    days.push({r:best,buy})}
+  const cost=Object.values(bought).reduce((s,b)=>s+b.cost,0),out=bento*wPpl*days.length,saved=Math.max(0,out-cost);
+  const W=['一','二','三','四','五','六','日'];
+  $('wOut').innerHTML=`<div class="sheet pop"><div class="big3"><div><b>${cost}</b><small>這週要買（元）</small></div><div><b>${out}</b><small>吃外面要（元）</small></div><div><b style="color:var(--tomato)">${saved}</b><small>省下（元）</small></div></div>
+    <div class="daygrid">${days.map((d,i)=>`<div class="day" style="--r:${(i%3-1)*0.8}deg"><small>星期${W[i]}</small><b>${d.r[0]}</b><span>${d.r[3]} 分・${d.buy.length?'買 '+d.buy.join('、'):'冰箱就有'}</span></div>`).join('')}</div>
+    <div class="row"><button class="btn red" id="wAgain" type="button">換一組</button><button class="btn" id="wCopy" type="button">傳到 LINE</button></div></div>
+    ${Object.keys(bought).length?`<div class="sheet"><h1 style="font-size:22px">🛒 採買清單</h1><p>${wPpl} 人份，買完打勾</p><div class="shop">${Object.entries(bought).map(([n,b])=>`<label><input type="checkbox"><span>${icoT(n)} ${n}${b.qty>1?' ×'+b.qty:''}</span><span class="p">${b.cost} 元</span><a href="${buyUrl(n)}" target="_blank" rel="noopener sponsored">線上買</a></label>`).join('')}</div></div>`:'<div class="sheet"><p>冰箱裡的就夠煮完，這週不用採買 🎉</p></div>'}
+    <div class="sheet"><p>讓菜放久一點</p><div class="shoplinks">${CONFIG.gear.map(([l,q])=>`<a href="${buyUrl(q)}" target="_blank" rel="noopener sponsored">${l}</a>`).join('')}</div><p class="fine">連結可能含推薦分潤，你的價格不受影響。</p></div>`;
+  lastPlan=`🧊 這週剩食菜單（${wPpl} 人）\n`+days.map((d,i)=>`星期${W[i]}：${d.r[0]}`).join('\n')+`\n\n🛒 要買：${Object.keys(bought).join('、')||'不用買'}（約 ${cost} 元）\n💰 比吃外面省 ${saved} 元\n\n你也排一份：${CONFIG.siteUrl}`;
+  $('wAgain').onclick=plan;$('wCopy').onclick=()=>copy(lastPlan,'已複製，貼到 LINE 家庭群組吧');
+  $('wGo').textContent='重新排'}
+$('wGo').addEventListener('click',plan);
+
+/* ---------- bank ---------- */
+function monthSum(){const now=new Date();let s=0,r=0,c=0;ledger.forEach(e=>{const d=new Date(e.d);if(d.getFullYear()===now.getFullYear()&&d.getMonth()===now.getMonth()){s+=e.s;r+=e.r;c++}});return{s,r,c}}
+function drawPig(){const m=monthSum();$('pigAmt').textContent=m.s;$('bankAmt').textContent=m.s;$('bankMonth').textContent=`${new Date().getMonth()+1} 月`;
+  $('bMeals').textContent=m.c;$('bRescue').textContent=m.r;$('bAll').textContent=ledger.reduce((a,e)=>a+e.s,0);
+  $('log').innerHTML=ledger.length?ledger.slice(0,40).map(e=>{const d=new Date(e.d);return`<div><span>${d.getMonth()+1}/${d.getDate()}</span><span>${e.n}</span><span class="p">+${e.s}</span></div>`}).join(''):'<p class="fine" style="text-align:center">還是空的。煮完一道按「煮好了」，錢就會掉進來。</p>'}
+function copy(t,msg){if(navigator.clipboard)navigator.clipboard.writeText(t).then(()=>toast(msg)).catch(()=>toast('複製不了，請手動複製'));else toast('複製不了，請手動複製')}
+$('copyBtn').addEventListener('click',()=>{const m=monthSum();copy(`這個月在家煮了 ${m.c} 餐，省下 ${m.s} 元便當錢，還救回 ${m.r} 元差點過期的食材 🐷\n冰箱剩什麼點一點就有菜：${CONFIG.siteUrl}`,'已複製')});
+let armed=0;$('resetBtn').addEventListener('click',e=>{if(Date.now()-armed<3000){ledger=[];LS.set('fr_ledger',ledger);drawPig();e.target.textContent='清除紀錄';toast('紀錄已清除');return}armed=Date.now();e.target.textContent='再按一次就清掉';setTimeout(()=>e.target.textContent='清除紀錄',3000)});
+$('shareBtn').addEventListener('click',()=>{const m=monthSum(),W=1080,H=1350,c=document.createElement('canvas');c.width=W;c.height=H;const g=c.getContext('2d');
+  g.fillStyle='#f4efe6';g.fillRect(0,0,W,H);g.strokeStyle='#e7dfd1';g.lineWidth=4;for(let x=0;x<W;x+=84){g.beginPath();g.moveTo(x,0);g.lineTo(x,H);g.stroke()}for(let y=0;y<H;y+=84){g.beginPath();g.moveTo(0,y);g.lineTo(W,y);g.stroke()}
+  g.fillStyle='#fffdf8';g.strokeStyle='#2b2622';g.lineWidth=8;rr(g,90,120,W-180,H-260,48);g.fill();g.stroke();
+  g.fillStyle='#2b2622';g.textAlign='center';g.font='900 58px "Noto Sans TC",sans-serif';g.fillText(`我 ${new Date().getMonth()+1} 月在家煮了 ${m.c} 餐`,W/2,270);
+  g.font='120px serif';g.fillText('🐷',W/2,450);
+  g.fillStyle='#e8503a';g.font='900 190px "Noto Sans TC",sans-serif';g.fillText(String(m.s),W/2,690);
+  g.fillStyle='#2b2622';g.font='700 48px "Noto Sans TC",sans-serif';g.fillText('元便當錢留在口袋',W/2,770);
+  g.fillStyle='#7a6f64';g.font='500 38px "Noto Sans TC",sans-serif';g.fillText(`還救回 ${m.r} 元差點過期的食材`,W/2,850);
+  ledger.slice(0,3).forEach((e,i)=>{g.fillText(`・${e.n}  +${e.s}`,W/2,940+i*56)});
+  g.fillStyle='#2b2622';g.font='700 36px "Noto Sans TC",sans-serif';g.fillText('冰箱救援｜冰箱剩什麼點一點就有菜',W/2,H-80);
+  $('shareImg').src=c.toDataURL('image/png');$('shareBox').hidden=false;$('shareBox').scrollIntoView({behavior:'smooth',block:'center'})});
+function rr(g,x,y,w,h,r){g.beginPath();g.moveTo(x+r,y);g.arcTo(x+w,y,x+w,y+h,r);g.arcTo(x+w,y+h,x,y+h,r);g.arcTo(x,y+h,x,y,r);g.arcTo(x,y,x+w,y,r);g.closePath()}
+
+/* ---------- settings ---------- */
+$('gearBtn').addEventListener('click',()=>{$('settings').hidden=false});
+$('closeSet').addEventListener('click',()=>{$('settings').hidden=true;drawTray()});
+$('settings').addEventListener('click',e=>{if(e.target.id==='settings')$('settings').hidden=true});
+pills('bentoSeg',[100,120,150],()=>bento,v=>{bento=v;LS.set('fr_bento',v)},v=>v+' 元');
+function drawStaples(){$('stapleSeg').innerHTML=STAPLES.map(s=>`<button class="pill" type="button" data-s="${s}" aria-pressed="${staplesOn.has(s)}">${s}</button>`).join('')}
+$('stapleSeg').addEventListener('click',e=>{const b=e.target.closest('[data-s]');if(!b)return;const s=b.dataset.s;staplesOn.has(s)?staplesOn.delete(s):staplesOn.add(s);save();drawStaples()});drawStaples();
+
+/* ---------- views ---------- */
+let tab='today',sub='pick';
+function show(v){sub=v;['pick','deck','cook'].forEach(k=>$('v-'+k).hidden=!(tab==='today'&&k===v));$('tray').hidden=!(tab==='today'&&v==='pick');window.scrollTo({top:0})}
+function setTab(t){tab=t;['today','week','bank'].forEach(k=>$('t-'+k).setAttribute('aria-selected',k===t));$('v-week').hidden=t!=='week';$('v-bank').hidden=t!=='bank';show(sub);if(t==='bank')drawPig()}
+['today','week','bank'].forEach(k=>$('t-'+k).addEventListener('click',()=>setTab(k)));
+$('pigBtn').addEventListener('click',()=>setTab('bank'));
+let tt;function toast(s){$('toast').textContent=s;$('toast').hidden=false;clearTimeout(tt);tt=setTimeout(()=>$('toast').hidden=true,2400)}
+
+/* ads only when configured on your own domain */
+if(CONFIG.adsense.client){try{const sc=document.createElement('script');sc.async=true;sc.src='https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client='+CONFIG.adsense.client;sc.crossOrigin='anonymous';document.head.appendChild(sc);
+  const ad=document.createElement('div');ad.className='sheet';ad.innerHTML=`<ins class="adsbygoogle" style="display:block" data-ad-client="${CONFIG.adsense.client}" data-ad-slot="${CONFIG.adsense.slot}" data-ad-format="auto" data-full-width-responsive="true"></ins>`;$('v-bank').appendChild(ad);(window.adsbygoogle=window.adsbygoogle||[]).push({})}catch(e){}}
+
+drawShelves();drawTray();drawPig();show('pick');
+})();
+</script>
+
+</body></html>
