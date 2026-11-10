@@ -68,6 +68,11 @@ button{font:inherit;color:inherit}
 .st.on{background:var(--egg);color:var(--egg-ink)}
 .st.hot{background:var(--tomato);color:var(--tomato-ink)}
 .st.hot::after{content:"快壞了";position:absolute;top:-10px;right:-8px;font-size:10px;font-weight:900;background:var(--ink);color:var(--paper);border-radius:6px;padding:0 5px;transform:rotate(8deg)}
+.addst{border:2px dashed var(--ink);background:transparent;border-radius:14px;padding:6px 12px;cursor:pointer;font-size:15px;color:var(--fridge-ink)}
+.mine{display:flex;flex-wrap:wrap;gap:8px}
+.mine span{display:inline-flex;align-items:center;gap:4px;background:var(--tile);border-radius:10px;padding:3px 4px 3px 10px;font-size:14px}
+.mine button{border:0;background:transparent;cursor:pointer;font-size:16px;color:var(--muted);padding:0 6px}
+.auto{font-size:11px;color:var(--muted);text-align:center;margin:-6px 0 0}
 .tip{font-size:13px;color:var(--fridge-ink);opacity:.85;margin-top:8px}
 /* tray */
 .tray{position:fixed;left:0;right:0;bottom:calc(64px + env(safe-area-inset-bottom,0px));z-index:12;display:flex;justify-content:center;pointer-events:none;
@@ -253,7 +258,15 @@ button{font:inherit;color:inherit}
   <h1 style="font-size:24px">設定</h1>
   <div class="seg"><span class="lab">外面一餐</span><span id="bentoSeg" class="seg"></span></div>
   <div><p style="margin-bottom:6px">家裡一定有的調味料（沒有的就點掉）</p><div class="seg" id="stapleSeg"></div></div>
+  <div id="mineBox"></div>
   <button class="btn egg" id="closeSet" type="button">好了</button>
+</div></div>
+<div class="modal" id="addSheet" hidden><div class="sheet">
+  <h1 style="font-size:24px">加一樣食材</h1>
+  <input class="search" id="addName" type="text" maxlength="8" placeholder="例如：櫛瓜、牛肉片、鴻喜菇" aria-label="食材名稱" style="margin:0">
+  <p>它比較像哪一類？會依類型幫你配家常做法</p>
+  <div class="seg" id="addType"></div>
+  <div class="btns"><button class="btn" id="addCancel" type="button">算了</button><button class="btn egg" id="addOk" type="button">加進冰箱</button></div>
 </div></div>
 <div class="toast" id="toast" hidden></div>
 
@@ -461,23 +474,51 @@ let sel=new Set(LS.get('fr_sel',['雞蛋','番茄','青蔥'])),exp=new Set(LS.ge
 let bento=LS.get('fr_bento',120),ledger=LS.get('fr_ledger',[]);
 const save=()=>{LS.set('fr_sel',[...sel]);LS.set('fr_exp',[...exp]);LS.set('fr_staples',[...staplesOn])};
 let showAll=false,query='';
+const TYPES={veg:['蔬菜',20],meat:['肉類',50],sea:['海鮮',60],staple:['主食',15],other:['蛋豆加工',20]};
+let custom=LS.get('fr_custom',[]);
+const TPL={
+ veg:x=>[[`蒜炒${x}`,[x],[],8,[`${x}洗淨切成好入口的大小。`,'熱油爆香蒜末。',`下${x}大火快炒，熟了加鹽起鍋。`]],
+   [`${x}炒蛋`,[x,'雞蛋'],['青蔥'],10,['蛋加鹽打散，先炒到半熟盛起。',`同鍋炒${x}到軟。`,'蛋倒回去拌勻，加鹽調味。']],
+   [`${x}肉片湯`,[x,'豬肉片'],['菇類','豆腐'],12,['水煮滾，肉片抓一點鹽下鍋。',`放${x}煮到熟。`,'鹽、胡椒調味。']],
+   [`${x}炒肉絲`,[x,'豬肉片'],['紅蘿蔔'],10,['肉切絲，抓醬油。','肉炒變色。',`下${x}快炒，鹽調味。`]]],
+ meat:x=>[[`醬燒${x}`,[x],['洋蔥','青蔥'],15,[`${x}切片或切塊。`,'煎到表面上色。','加醬油 2 匙、糖 1 匙、水半碗，燒到熟透收汁。']],
+   [`${x}炒高麗菜`,[x,'高麗菜'],['紅蘿蔔'],12,[`${x}切片先炒熟。`,'下高麗菜炒軟。','醬油、鹽調味。']],
+   [`${x}炒飯`,['白飯',x],['雞蛋','青蔥'],12,[`${x}切小丁炒熟。`,'下飯炒散，可以加蛋。','鹽、胡椒、醬油調味。']],
+   [`洋蔥炒${x}`,[x,'洋蔥'],[],12,['洋蔥切絲炒軟。',`下${x}炒熟。`,'醬油、糖少許炒勻。']]],
+ sea:x=>[[`蒜香${x}`,[x],['九層塔','青蔥'],10,['爆香蒜末。',`下${x}煎或炒到熟。`,'鹽、胡椒調味，有九層塔就丟一把。']],
+   [`${x}炒蛋`,[x,'雞蛋'],['青蔥'],10,[`${x}先炒熟盛起。`,'蛋加鹽炒到半熟。',`${x}回鍋拌勻。`]],
+   [`${x}炒飯`,['白飯',x],['雞蛋'],12,[`${x}切小塊炒熟。`,'下飯炒散。','鹽、胡椒調味。']],
+   [`${x}湯`,[x],['葉菜類','豆腐'],10,['水煮滾。',`放${x}煮熟。`,'鹽調味，有青菜豆腐就一起放。']]],
+ staple:x=>[[`炒${x}`,[x,'高麗菜'],['豬肉片','雞蛋'],12,[`${x}先煮或泡軟。`,'炒肉片和高麗菜。',`放${x}，加醬油、少許水炒勻。`]],
+   [`${x}湯`,[x,'葉菜類'],['雞蛋','火鍋料'],10,['水加醬油、鹽煮滾。',`放${x}煮熟。`,'放青菜，可以倒蛋花。']],
+   [`${x}加蛋`,[x,'雞蛋'],['青蔥'],10,[`${x}照包裝煮熟或加熱。`,'煎一顆荷包蛋或炒蛋。','放在一起，淋醬油、撒蔥。']]],
+ other:x=>[[`${x}炒蛋`,[x,'雞蛋'],['青蔥'],8,[`${x}切小塊。`,'和蛋液一起打勻。','熱油炒成大塊，加鹽。']],
+   [`${x}拌飯`,['白飯',x],['雞蛋'],8,[`${x}加熱或稍微炒過。`,'鋪在熱飯上。','淋醬油、香油拌開，可以加顆蛋。']],
+   [`${x}炒青菜`,[x,'葉菜類'],[],8,[`${x}切小塊先炒香。`,'下青菜大火快炒。','加鹽起鍋。']]]
+};
+let ALL=R;
+function rebuild(){custom.forEach(c=>PRICE[c.n]=TYPES[c.t][1]);const names=new Set(R.map(r=>r[0]));ALL=R.concat(custom.flatMap(c=>TPL[c.t](c.n).filter(r=>!names.has(r[0])).map(r=>(r[5]=1,r))))}
+rebuild();
+const allNames=()=>CATS.flatMap(c=>c[1].map(x=>x[0])).concat(custom.map(c=>c.n));
 
 /* ---------- matching ---------- */
 function score(r){const[,need,opt]=r;const missing=need.filter(n=>!sel.has(n));if(missing.length>1)return null;const used=[...need,...opt].filter(n=>sel.has(n));return{r,missing,used,full:!missing.length,hot:used.filter(n=>exp.has(n)).length}}
-function match(){if(!sel.size)return[];return R.map(score).filter(m=>m&&m.used.length).sort((a,b)=>(b.full-a.full)||(b.hot-a.hot)||(b.used.length-a.used.length)||(a.r[3]-b.r[3]))}
+function match(){if(!sel.size)return[];return ALL.map(score).filter(m=>m&&m.used.length).sort((a,b)=>(b.full-a.full)||(b.hot-a.hot)||(b.used.length-a.used.length)||(a.r[3]-b.r[3]))}
 function money(m){const buy=m.missing.reduce((s,n)=>s+(PRICE[n]||0),0),rescued=m.used.reduce((s,n)=>s+(PRICE[n]||0),0);return{buy,rescued,saved:Math.max(0,bento-buy)}}
 
 /* ---------- pick ---------- */
 const rot=n=>{let h=0;for(const c of n)h=(h*31+c.charCodeAt(0))%997;return((h%7)-3)*0.8+'deg'};
 function sticker(n){const st=exp.has(n)?'hot':sel.has(n)?'on':'';return`<button class="st ${st}" type="button" data-n="${n}" style="--r:${rot(n)}" aria-pressed="${sel.has(n)}">${ico(n)}${n}</button>`}
 function drawShelves(){const box=$('shelves');const q=query.trim();
-  if(q){const hits=CATS.flatMap(c=>c[1].map(x=>x[0])).filter(n=>n.includes(q));box.innerHTML=hits.length?`<div class="shelf">${hits.map(sticker).join('')}</div>`:`<p class="tip">冰箱清單裡沒有「${q}」，試試別的說法。</p>`;return}
+  if(q){const hits=allNames().filter(n=>n.includes(q));box.innerHTML=(hits.length?`<div class="shelf">${hits.map(sticker).join('')}</div>`:`<p class="tip">清單裡還沒有「${q}」。</p>`)+(allNames().includes(q)?'':`<button class="addst" type="button" data-add="${q.replace(/"/g,'')}">＋ 把「${q}」加進冰箱</button>`);return}
   let h=`<div class="shelf-label">最常剩的</div><div class="shelf">${COMMON.map(sticker).join('')}</div>`;
-  const extra=[...sel].filter(n=>!COMMON.includes(n));
+  const mineN=custom.map(c=>c.n);const extra=[...sel].filter(n=>!COMMON.includes(n)&&!mineN.includes(n));
+  if(mineN.length)h+=`<div class="shelf-label">你自己加的</div><div class="shelf">${mineN.map(sticker).join('')}</div>`;
   if(!showAll){if(extra.length)h+=`<div class="shelf-label">你選的</div><div class="shelf">${extra.map(sticker).join('')}</div>`;h+=`<button class="more" id="moreBtn" type="button">看全部 50 種食材 ↓</button>`}
   else{CATS.forEach(([c,items])=>{const list=items.map(x=>x[0]).filter(n=>!COMMON.includes(n));if(list.length)h+=`<div class="shelf-label">${c}</div><div class="shelf">${list.map(sticker).join('')}</div>`});h+=`<button class="more" id="moreBtn" type="button">收起來 ↑</button>`}
+  h+=`<div><button class="addst" type="button" data-add="">＋ 冰箱裡有別的？自己加</button></div>`;
   box.innerHTML=h;const mb=$('moreBtn');mb&&mb.addEventListener('click',()=>{showAll=!showAll;drawShelves()})}
-$('shelves').addEventListener('click',e=>{const b=e.target.closest('.st');if(!b)return;const n=b.dataset.n;
+$('shelves').addEventListener('click',e=>{const ad=e.target.closest('[data-add]');if(ad){openAdd(ad.dataset.add);return}const b=e.target.closest('.st');if(!b)return;const n=b.dataset.n;
   if(!sel.has(n)){sel.add(n)}else if(!exp.has(n)){exp.add(n)}else{sel.delete(n);exp.delete(n)}
   save();drawShelves();drawTray()});
 $('q').addEventListener('input',e=>{query=e.target.value;drawShelves()});
@@ -493,7 +534,7 @@ function plateHTML(r){const items=[...r[1],...r[2].filter(n=>sel.has(n))].slice(
   return`<div class="plate" aria-hidden="true">${items.map((n,i)=>{const[x,y]=pos[i];return EMO[n]?`<i style="left:${x}%;top:${y}%;transform:translate(-50%,-50%) rotate(${(i*37)%30-15}deg)">${EMO[n]}</i>`:`<i class="txt" style="left:${x}%;top:${y}%;transform:translate(-50%,-50%)">${n}</i>`}).join('')}</div>`}
 function cardHTML(m){const[name,need,opt,t]=m.r;const mo=money(m);
   const facts=[`<span>⏱ ${t} 分鐘</span>`];if(m.hot)facts.push(`<span class="hotf">救 ${m.hot} 樣快壞的</span>`);if(m.missing.length)facts.push(`<span class="miss">還差 ${m.missing[0]}</span>`);else facts.push('<span>不用另外買</span>');
-  return`<div class="stamp"><div><small>省下</small><b>${mo.saved}</b><small>元</small></div></div>${plateHTML(m.r)}<h2>${name}</h2><div class="facts">${facts.join('')}</div>
+  return`<div class="stamp"><div><small>省下</small><b>${mo.saved}</b><small>元</small></div></div>${plateHTML(m.r)}<h2>${name}</h2><div class="facts">${facts.join('')}</div>${m.r[5]?'<p class="auto">依你加的食材自動配的家常做法</p>':''}
    <p class="note">用掉你的 ${m.used.map(icoT).join(' ')}${m.missing.length?`　·　沒有${m.missing[0]}？<a href="${buyUrl(m.missing[0])}" target="_blank" rel="noopener sponsored">線上買</a>或省略`:''}</p>
    <div class="btns"><button class="btn" type="button" data-act="next">換一道</button><button class="btn red" type="button" data-act="cook">就煮這個！</button></div>`}
 function drawDeck(){const d=$('deck');
@@ -533,7 +574,7 @@ pills('wDays',[3,5,7],()=>wDays,v=>{wDays=v;LS.set('fr_wdays',v)},v=>v+' 天');
 pills('wPpl',[1,2,4],()=>wPpl,v=>{wPpl=v;LS.set('fr_wppl',v)},v=>v+' 人');
 function plan(){const f=PF[wPpl]||1;const fu={};sel.forEach(n=>fu[n]=0);const bought={},used=new Set(),days=[];
   for(let d=0;d<wDays;d++){let best=null,bs=-1e9;
-    for(const r of R){if(used.has(r[0]))continue;const[,need,opt]=r;let sc=Math.random()*0.6;
+    for(const r of ALL){if(used.has(r[0]))continue;const[,need,opt]=r;let sc=Math.random()*0.6;
       for(const n of need){if(n in fu&&fu[n]<CAP(n))sc+=fu[n]===0?(exp.has(n)?6:4):2;else if(bought[n]&&bought[n].left>0)sc+=2.5;else sc-=(PRICE[n]||20)/12}
       for(const n of opt)if((n in fu&&fu[n]<CAP(n))||(bought[n]&&bought[n].left>0))sc+=0.5;
       const last=days.slice(-2).flatMap(x=>x.r[1]);sc-=need.filter(n=>last.includes(n)).length*0.8;
@@ -574,6 +615,22 @@ $('shareBtn').addEventListener('click',()=>{const m=monthSum(),W=1080,H=1350,c=d
   g.fillStyle='#2b2622';g.font='700 36px "Noto Sans TC",sans-serif';g.fillText('冰箱救援｜冰箱剩什麼點一點就有菜',W/2,H-80);
   $('shareImg').src=c.toDataURL('image/png');$('shareBox').hidden=false;$('shareBox').scrollIntoView({behavior:'smooth',block:'center'})});
 function rr(g,x,y,w,h,r){g.beginPath();g.moveTo(x+r,y);g.arcTo(x+w,y,x+w,y+h,r);g.arcTo(x+w,y+h,x,y+h,r);g.arcTo(x,y+h,x,y,r);g.arcTo(x,y,x+w,y,r);g.closePath()}
+
+/* ---------- custom ingredients ---------- */
+let addT='veg';
+function drawAddType(){$('addType').innerHTML=Object.entries(TYPES).map(([k,v])=>`<button class="pill" type="button" data-t="${k}" aria-pressed="${addT===k}">${v[0]}</button>`).join('')}
+$('addType').addEventListener('click',e=>{const b=e.target.closest('[data-t]');if(!b)return;addT=b.dataset.t;drawAddType()});
+function openAdd(name){$('addName').value=name||'';addT='veg';drawAddType();$('addSheet').hidden=false;setTimeout(()=>$('addName').focus(),50)}
+$('addCancel').addEventListener('click',()=>$('addSheet').hidden=true);
+$('addSheet').addEventListener('click',e=>{if(e.target.id==='addSheet')$('addSheet').hidden=true});
+$('addOk').addEventListener('click',()=>{const n=$('addName').value.trim().replace(/[<>"'&]/g,'');if(!n){toast('先輸入食材名稱');return}
+  if(allNames().includes(n)){sel.add(n);save();$('addSheet').hidden=true;query='';$('q').value='';drawShelves();drawTray();toast(`${n} 本來就在清單裡，已幫你選起來`);return}
+  if(custom.length>=30){toast('最多加 30 樣');return}
+  custom.push({n,t:addT});LS.set('fr_custom',custom);rebuild();sel.add(n);save();$('addSheet').hidden=true;query='';$('q').value='';drawShelves();drawTray();drawMine();
+  toast(`加好了！${n} 可以做 ${TPL[addT](n).length} 道家常做法`)});
+function drawMine(){$('mineBox').innerHTML=custom.length?`<p style="margin-bottom:6px">你自己加的食材</p><div class="mine">${custom.map((c,i)=>`<span>${c.n}・${TYPES[c.t][0]}<button type="button" data-del="${i}" aria-label="刪除${c.n}">×</button></span>`).join('')}</div>`:''}
+$('mineBox').addEventListener('click',e=>{const b=e.target.closest('[data-del]');if(!b)return;const c=custom.splice(+b.dataset.del,1)[0];sel.delete(c.n);exp.delete(c.n);LS.set('fr_custom',custom);save();rebuild();drawMine();drawShelves();drawTray()});
+drawMine();
 
 /* ---------- settings ---------- */
 $('gearBtn').addEventListener('click',()=>{$('settings').hidden=false});
