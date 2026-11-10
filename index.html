@@ -445,7 +445,7 @@ const R=[
 const STAPLES=['鹽','油','醬油','糖','胡椒','蒜頭'];
 const CONFIG={
   siteUrl:'https://onlyhandrubbing.github.io/bingxiang/',
-  shopee:{affiliateId:'',subId:'fridge'},
+  shopee:{affiliateId:'16301320039',subId:'bingxiang'},
   gear:[['玻璃保鮮盒','玻璃保鮮盒'],['夾鏈袋','食物夾鏈袋'],['冰箱收納盒','冰箱收納盒'],['真空封口機','真空封口機']],
   adsense:{client:'',slot:''}
 };
@@ -453,7 +453,8 @@ const EMO={雞蛋:'🥚',豬絞肉:'🥩',豬肉片:'🥩',雞胸肉:'🍗',雞�
 const COMMON=['雞蛋','白飯','高麗菜','番茄','洋蔥','青蔥','豆腐','豬肉片','麵條','葉菜類','吐司','泡麵'];
 const ico=(n,cls='e')=>EMO[n]?`<span class="${cls}">${EMO[n]}</span>`:`<span class="${cls} txt">${n.slice(-1)}</span>`;
 const icoT=n=>EMO[n]||n;
-function buyUrl(q){const base='https://shopee.tw/search?keyword='+encodeURIComponent(q);const a=CONFIG.shopee;return a.affiliateId?'https://s.shopee.tw/an_redir?origin_link='+encodeURIComponent(base)+'&affiliate_id='+a.affiliateId+'&sub_id='+a.subId:base}
+const AFF={"雞蛋": "906fuqUDA0", "豆腐": "9AQ679TZp3", "豆干": "8fTpWEVTpy", "皮蛋": "8pnFiXUqV1", "豬絞肉": "8Kqz7cWkVw", "豬肉片": "9KjWJSXY3K", "雞胸肉": "9V2wVlWuiN", "雞腿肉": "6L5ujwiy8m", "培根": "6VPKwFiKnp", "火腿": "60T4LKkEok", "香腸": "1qdVNg539V", "蝦仁": "1LhEml6xAQ", "鮭魚": "1W0ez46JpT", "蛤蜊": "2LZlyb398e", "火鍋料": "2VtCAu2Vnh", "鮪魚罐頭": "2qW2ZW1Ndi", "高麗菜": "2gCcND20yh", "番茄": "3qOZlLxZbw", "洋蔥": "3g59Z2yCwv", "青蔥": "3VljMjyqHu", "青椒": "5fqDwizFvU", "紅蘿蔔": "5q9e91ycaX", "馬鈴薯": "5LDNY70WbS", "菇類": "5VWnkPztGV", "葉菜類": "6L5ujwwiZg", "小黃瓜": "7puiWhr0X7", "茄子": "7KyRvmsuY2", "韭菜": "7VHs85sHD5", "九層塔": "8Kqz7cp6WG", "豆芽菜": "8VAPJvoTBJ", "絲瓜": "3LSJARCfyF", "南瓜": "3B8sy8DJJE", "地瓜": "30pSlpDweD", "白蘿蔔": "2qW2ZWEZzC", "花椰菜": "2gCcNDFDKB", "泡菜": "3LSJARH90t", "玉米罐頭": "3B8sy8HmLs", "白飯": "30pSlpIPgr", "麵條": "2qW2ZWJ31q", "泡麵": "2gCcNDJgMp", "烏龍麵": "4VeGYaBwlV", "冬粉": "40hzxfDqmQ", "吐司": "4B1Q9yDDRT", "饅頭": "50aX9VA2ke", "米粉": "5AtxLo9PPh", "年糕": "6AmUXe9nOJ", "冷凍水餃": "4VeGYaG8m0", "牛奶": "4LKqMHGm6z", "起司片": "4B1Q9yHPRy", "奶油": "40hzxfI2mx", "玻璃保鮮盒": "70LbX8qen8", "食物夾鏈袋": "7Af1jRq1SB", "冰箱收納盒": "60T4LIuSoy", "真空封口機": "6AmUXbtpU1"};
+function buyUrl(q){if(AFF[q])return'https://s.shopee.tw/'+AFF[q];const base='https://shopee.tw/search?keyword='+encodeURIComponent(q);const a=CONFIG.shopee;return a.affiliateId?'https://s.shopee.tw/an_redir?origin_link='+encodeURIComponent(base)+'&affiliate_id='+a.affiliateId+'&sub_id='+a.subId:base}
 const $=id=>document.getElementById(id);
 const LS={get(k,d){try{const v=localStorage.getItem(k);return v?JSON.parse(v):d}catch(e){return d}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
 let sel=new Set(LS.get('fr_sel',['雞蛋','番茄','青蔥'])),exp=new Set(LS.get('fr_exp',[])),staplesOn=new Set(LS.get('fr_staples',STAPLES));
